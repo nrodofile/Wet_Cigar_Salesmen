@@ -80,6 +80,7 @@ public:
 private:
 	
 	vector<vector<Edge>> adjacencyMatrix;
+	int verticies;
 	
 /*  Function: TSPBruteForce
  *--------------------------------------------------

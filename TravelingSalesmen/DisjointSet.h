@@ -12,6 +12,9 @@
 #include <iostream>
 
 class DisjointSet {
+	
+private:
+	int size;
 
 public:
 /*  Function: DisjointSet - Constructor
