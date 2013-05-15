@@ -10,11 +10,14 @@
 #define __TravelingSalesmen__DisjointSet__
 
 #include <iostream>
+#include <vector>
 
 class DisjointSet {
 	
 private:
-	int size;
+	//int size;
+	std::vector<int> id;
+	std::vector<int> size;
 
 public:
 /*  Function: DisjointSet - Constructor

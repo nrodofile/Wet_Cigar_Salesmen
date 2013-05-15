@@ -228,6 +228,7 @@
 		2226F1A81740917B002390F9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -235,6 +236,7 @@
 		2226F1A91740917B002390F9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -258,6 +260,7 @@
 				2226F1A91740917B002390F9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

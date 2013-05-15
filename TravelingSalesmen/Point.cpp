@@ -29,6 +29,26 @@ Point::~Point(){
 	
 }
 
+/*  Function:
+ *--------------------------------------------------
+ *	Usage: GetX
+ *--------------------------------------------------
+ *  Returns: the X position for this point
+ */
+int Point::GetX(){
+	return x;
+}
+
+/*  Function:
+ *--------------------------------------------------
+ *	Usage: GetY
+ *--------------------------------------------------
+ *  Returns: the Y position for this point
+ */
+int Point::GetY(){
+	return y;
+}
+
 /*  Function: DistanceToPoint
  *--------------------------------------------------
  *	Usage: distance = point.DistanceToPoint(point2)
@@ -36,10 +56,11 @@ Point::~Point(){
  *  Returns: the Euclidean distance between this Point
  *	and the Point* parameter to the function
  */
-double Point::DistanceTo(Point*){
-	double euclidean = 0;
+double Point::DistanceTo(Point *point){
 	
-	return euclidean;
+	double squared = 2.0;
+	return sqrt((pow(x - point->GetX(), squared) +
+			pow(y - point->GetY(), squared)));
 }
 
 /*  Function: ToString

@@ -10,6 +10,8 @@
 #define __TravelingSalesmen__Point__
 
 #include <iostream>
+#include <string>
+#include <math.h>
 
 using namespace std;
 
@@ -32,6 +34,22 @@ public:
  */
 	~Point();
 	
+/*  Function:
+ *--------------------------------------------------
+ *	Usage: GetX
+ *--------------------------------------------------
+ *  Returns: the X position for this point
+ */
+	int GetX();
+	
+/*  Function:
+ *--------------------------------------------------
+ *	Usage: GetY
+ *--------------------------------------------------
+ *  Returns: the Y position for this point
+ */
+	int GetY();
+	
 /*  Function: DistanceToPoint
  *--------------------------------------------------
  *	Usage: distance = point.DistanceToPoint(point2)
@@ -39,7 +57,7 @@ public:
  *  Returns: the Euclidean distance between this Point
  *	and the Point* parameter to the function
  */
-	double DistanceTo(Point*);
+	double DistanceTo(Point *point);
 
 /*  Function: ToString
  *--------------------------------------------------
