@@ -16,8 +16,11 @@ class DisjointSet {
 	
 private:
 	//int size;
-	std::vector<int> id;
-	std::vector<int> size;
+	int* id;
+	int* size;
+	int N;
+	//std::vector<int> id;
+	//std::vector<int> size;
 
 public:
 /*  Function: DisjointSet - Constructor
@@ -27,7 +30,7 @@ public:
  *  Constructor which sets the size of this
  *	DisjointSet
  */
-	DisjointSet(int size);
+	DisjointSet(int);
 	
 /*  Function: DisjointSet - Destructor
  *--------------------------------------------------

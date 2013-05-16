@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "testDisjoint():main.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "DisjointSet::Find(int):DisjointSet.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "DisjointSet::DisjointSet(int):DisjointSet.cpp">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

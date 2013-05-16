@@ -14,11 +14,17 @@
  *  Constructor which sets the size of this
  *	DisjointSet
  */
-DisjointSet::DisjointSet(int size){
+DisjointSet::DisjointSet(int N){
+	
+	this->N = N;
+	//id.assign (N,0);
+	//size.assign (N,0);
+	size = new int[N];
+	id = new int[N];
 
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < N; i++) {
 		id[i] = i;
-		this->size[i] = 1;
+		size[i] = 1;
 	}
 }
 
@@ -28,7 +34,8 @@ DisjointSet::DisjointSet(int size){
  *--------------------------------------------------
  */
 DisjointSet::~DisjointSet(){
-	
+		delete id;
+		delete size;
 }
 
 /*  Function: Find
@@ -43,7 +50,8 @@ int DisjointSet::Find(int i){
 		id[i] = id[id[i]]; // make elements point to their grandparent
 		i = id[i];
 	}
-	return i;}
+	return i;
+}
 
 /*  Function: Union
  *--------------------------------------------------
