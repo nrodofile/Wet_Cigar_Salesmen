@@ -10,6 +10,7 @@
 #include "Point.h"
 #include "DisjointSet.h"
 #include "Vertex.h"
+#include "Edge.h"
 using namespace std;
 
 string testInt(int test, int expected){
@@ -168,6 +169,54 @@ void testVerticies(){
 	delete v10;
 }
 
+void testEdge(){
+	cout << endl << "Edge Test" << endl;
+	Vertex *v1 = new Vertex(1);
+	Vertex *v2 = new Vertex(2);
+	Vertex *v3 = new Vertex(3);
+	Vertex *v4 = new Vertex(4);
+	Vertex *v5 = new Vertex(5);
+	
+	Edge *e1 = new Edge(v1, v2, 3);
+	Edge *e2 = new Edge(v2, v3, 6);
+	Edge *e3 = new Edge(v3, v4, 8);
+	Edge *e4 = new Edge(v4, v5, 7);
+	Edge *e5 = new Edge(v5, v1, 5);
+	
+	cout << testInt((e1->GetSource())->GetId(), 1) << endl;
+	cout << testInt((e1->GetDestination())->GetId(), 2) << endl;
+	cout << testInt(e1->GetWeight(), 3) << endl;
+	
+	cout << testInt((e2->GetSource())->GetId(), 2) << endl;
+	cout << testInt((e2->GetDestination())->GetId(), 3) << endl;
+	cout << testInt(e2->GetWeight(), 6) << endl;
+	
+	cout << testInt((e3->GetSource())->GetId(), 3) << endl;
+	cout << testInt((e3->GetDestination())->GetId(), 4) << endl;
+	cout << testInt(e3->GetWeight(), 8) << endl;
+	
+	cout << testInt((e4->GetSource())->GetId(), 4) << endl;
+	cout << testInt((e4->GetDestination())->GetId(), 5) << endl;
+	cout << testInt(e4->GetWeight(), 7) << endl;
+	
+	cout << testInt((e5->GetSource())->GetId(), 5) << endl;
+	cout << testInt((e5->GetDestination())->GetId(), 1) << endl;
+	cout << testInt(e5->GetWeight(), 5) << endl;
+
+	
+	delete e1;
+	delete e2;
+	delete e3;
+	delete e4;
+	delete e5;
+	delete v1;
+	delete v2;
+	delete v3;
+	delete v4;
+	delete v5;
+
+}
+
 int main(int argc, const char * argv[])
 {
 
@@ -177,6 +226,7 @@ int main(int argc, const char * argv[])
 	testPoint();
 	testDisjoint();
 	testVerticies();
+	testEdge();
 	
 	    return 0;
 }
