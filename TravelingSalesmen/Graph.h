@@ -79,7 +79,8 @@ public:
 	
 private:
 	
-	vector< vector<Edge> > adjacencyMatrix;
+	vector<Vertex*> adjacencies;
+	vector<Edge*> edges;
 	int verticies;
 	
 /*  Function: TSPBruteForce

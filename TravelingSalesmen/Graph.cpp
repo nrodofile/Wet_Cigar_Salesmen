@@ -36,7 +36,7 @@ Graph::~Graph(){
  *	for this Graph.
  */
 void Graph::AddVertex(Vertex *vertex){
-	
+	adjacencies.push_back(vertex);
 }
 
 /*  Function: GetVertex
@@ -47,7 +47,7 @@ void Graph::AddVertex(Vertex *vertex){
  *				the identifier/index in the parameter
  */
 Vertex* Graph::GetVertex(int identifier){
-	return NULL;
+	return adjacencies[identifier];
 }
 
 /*  Function: AddEdge
@@ -58,7 +58,7 @@ Vertex* Graph::GetVertex(int identifier){
  *	Graph.
  */
 void Graph::AddEdge(Edge *edge){
-	
+	edges.push_back(edge);
 }
 
 /*  Function: OptimalTSP
@@ -92,6 +92,8 @@ double Graph::ApproximateTSP(){
  *  Returns:
  */
 double Graph::TSPBruteForce(int, bool*){
+	
+	
 	return 0;
 }
 
@@ -113,7 +115,6 @@ double Graph::TSPDP(int, int){
  *--------------------------------------------------
  *  [DESCRIPTION]
  *
- *  Returns:
  */
 void Graph::MinimumSpanningTree(){
 	
