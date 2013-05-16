@@ -80,7 +80,7 @@ public:
 private:
 	
 	vector<Vertex*> adjacencies;
-	vector<Edge*> edges;
+	vector< vector <Edge*> > edges;
 	int verticies;
 	
 /*  Function: TSPBruteForce

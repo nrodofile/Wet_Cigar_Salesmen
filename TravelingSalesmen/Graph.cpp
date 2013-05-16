@@ -58,7 +58,9 @@ Vertex* Graph::GetVertex(int identifier){
  *	Graph.
  */
 void Graph::AddEdge(Edge *edge){
-	edges.push_back(edge);
+	vector<Edge*> e;
+	e.push_back(edge);
+	edges.push_back(e);
 }
 
 /*  Function: OptimalTSP
@@ -92,7 +94,26 @@ double Graph::ApproximateTSP(){
  *  Returns:
  */
 double Graph::TSPBruteForce(int, bool*){
-	
+//	create array of bool named visited with size = numVertices
+//	initialise visited to false
+//	set first element of visited to true
+//	result = TSPBruteForce(0, visited)
+//	TSPBruteForce(current, visited):
+//	if all elements in visited are true
+//		return distance from current to 0
+//		make a copy of visited
+//		set minDistance to INFINITY
+//		for adjacent from 0 to numVertices-1
+//			if current != adjacent AND adjacent not visited
+//				set adjacent in copy of visited to true
+//				dist = distance from current to adjacent +
+//				TSPBruteForce(adjacent, copy of visited)
+//				minDistance = minimum(minDistance, dist)
+//				set adjacent in copy of visited to false
+//			end if
+//		end for
+//		return minDistance
+//	end
 	
 	return 0;
 }
@@ -106,6 +127,29 @@ double Graph::TSPBruteForce(int, bool*){
  *  Returns:
  */
 double Graph::TSPDP(int, int){
+	
+
+//	Create memoisation table [N][(1 << N)]
+//	Set all values in table to UNSET
+//	result = TSPDP(0, 1)
+//	TSPDP(current, bitmask):
+//	if table[current][bitmask] is not UNSET
+//		return table[current][bitmask]
+//	if bitmask == ((1 << N) – 1)
+//			return distance from current to 0
+//	minDistance = INFINTY
+//	for adjacent from 0 to N-1
+//		if current != adjacent AND
+//			((bitmask & (1 << adjacent)) == 0)
+//			dist = distance from current to adjacent +
+//			TSPDP(adjacent, (bitmask | (1 << adjacent)))
+//			minDistance = min(minDistance, dist)
+//		endif
+//	endfor
+//	table[current][bitmask] = minDistance
+//	return minDistance
+	
+	
 	return 0;
 }
 
@@ -117,7 +161,17 @@ double Graph::TSPDP(int, int){
  *
  */
 void Graph::MinimumSpanningTree(){
+//	1.Place each vertex in its own cluster or
+//	set
 	
+//	2.Take the edge e with the smallest weight
+//		a) If e connects two vertices in different
+//		clusters, then e is added to the MST and the
+//		two clusters connected by e are merged into a
+//		single cluster
+//		b) If e connects two vertices which are already
+//		in the same cluster, ignore it
+//	3.Continue until N – 1 edges are selected
 }
 
 
@@ -130,6 +184,28 @@ void Graph::MinimumSpanningTree(){
  *	the sub-graph formed from the MST
  */
 double DepthFirstSearch(){
-	return 0;
+	
+	int dist = 0;
+//	initialise visited array to false
+//	create empty stack
+//	push vertex 0 onto stack
+//	mark vertex 0 visited
+//	let current vertex = NULL
+//	let previous vertex = NULL
+//	while stack not empty
+//		current = pop from stack
+//		if previous not NULL
+//			dist = dist + distance from previous to current
+//		end if
+//		for vertices adjacent to current
+//			if adjacent vertex not visited
+//				push adjacent vertex onto stack
+//				mark adjacent vertex visited
+//			end if
+//		end for
+//		previous = current
+//	end while
+//	dist = distance from current to vertex 0
+		return dist;
 }
 
