@@ -15,8 +15,8 @@
  *  Constructor which sets the number of vertices in
  *	this Graph
  */
-Graph::Graph(int vertices){
-	this->verticies = vertices;
+Graph::Graph(int V){
+	this->verticies = V;
 }
 
 /*  Function: Graph - Destructor
@@ -58,9 +58,18 @@ Vertex* Graph::GetVertex(int identifier){
  *	Graph.
  */
 void Graph::AddEdge(Edge *edge){
-	vector<Edge*> e;
-	e.push_back(edge);
-	edges.push_back(e);
+	map< int, vector <Edge*> >::iterator it;	
+	int id = (edge->GetSource())->GetId();
+	it = edges.find(id);
+	
+	if(it != edges.end()){
+		vector<Edge*> e = edges.at(id);
+		e.push_back(edge);
+	}else{
+		vector<Edge*> e;
+		e.push_back(edge);
+		edges.insert(pair<int, vector <Edge*> >(id, e));
+	}
 }
 
 /*  Function: OptimalTSP

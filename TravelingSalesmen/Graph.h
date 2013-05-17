@@ -10,8 +10,10 @@
 #define __TravelingSalesmen__Graph__
 
 #include <iostream>
+#include <map>
 #include "Vertex.h"
 #include "Edge.h"
+
 
 class Graph {
 	
@@ -80,7 +82,8 @@ public:
 private:
 	
 	vector<Vertex*> adjacencies;
-	vector< vector <Edge*> > edges;
+	map< int, vector <Edge*> > edges;
+	//vector< vector <Edge*> > edges;
 	int verticies;
 	
 /*  Function: TSPBruteForce
