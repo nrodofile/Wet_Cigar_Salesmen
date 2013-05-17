@@ -11,12 +11,20 @@
 
 #include <iostream>
 #include <map>
+#include <stack>
+#include <vector>
 #include "Vertex.h"
 #include "Edge.h"
 
 
 class Graph {
 	
+	vector<Vertex*> adjacencies;
+	//map< int, vector <Edge*> > edges;
+	vector< vector <int> > edges;
+	//int *edges;
+	int verticies;
+
 public:
 	
 /*  Function: Graph - Constructor
@@ -26,7 +34,7 @@ public:
  *  Constructor which sets the number of vertices in
  *	this Graph
  */
-	Graph(int vertices);
+	Graph(int verticies);
 	
 /*  Function: Graph - Destructor
  *--------------------------------------------------
@@ -80,11 +88,7 @@ public:
 	double ApproximateTSP();
 	
 private:
-	
-	vector<Vertex*> adjacencies;
-	map< int, vector <Edge*> > edges;
-	//vector< vector <Edge*> > edges;
-	int verticies;
+
 	
 /*  Function: TSPBruteForce
  *--------------------------------------------------

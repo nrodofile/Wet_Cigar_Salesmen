@@ -11,13 +11,14 @@
 #include "DisjointSet.h"
 #include "Vertex.h"
 #include "Edge.h"
+#include "Graph.h"
 using namespace std;
 
 string testInt(int test, int expected){
 	if ( test == expected){
 		return "pass";
 	}else{
-		cout << test << "\t";
+		cout << expected << " Got " << test << "\t";
 		return "fail";
 	}
 }
@@ -217,6 +218,122 @@ void testEdge(){
 
 }
 
+void testGraph(){
+	cout << endl << "Edge Graph" << endl;
+	Vertex *A = new Vertex(0);
+	Vertex *B = new Vertex(1);
+	Vertex *C = new Vertex(2);
+	Vertex *D = new Vertex(3);
+	Vertex *E = new Vertex(4);
+	Vertex *F = new Vertex(5);
+	
+	A->AddAdjacency(B);
+	A->AddAdjacency(C);
+	A->AddAdjacency(E);
+
+	Edge *e1 = new Edge(A, B, 5);
+	Edge *e2 = new Edge(A, C, 4);
+	Edge *e3 = new Edge(A, E, 2);
+	
+	B->AddAdjacency(A);
+	B->AddAdjacency(D);
+	B->AddAdjacency(F);
+	
+	Edge *e4 = new Edge(B, A, 5);
+	Edge *e5 = new Edge(B, D, 2);
+	Edge *e6 = new Edge(B, F, 3);
+	
+	C->AddAdjacency(A);
+	C->AddAdjacency(E);
+	
+	Edge *e7 = new Edge(C, A, 4);
+	Edge *e8 = new Edge(C, E, 3);
+	
+	D->AddAdjacency(A);
+	D->AddAdjacency(B);
+	D->AddAdjacency(E);
+	D->AddAdjacency(F);
+	
+	Edge *e9 = new Edge(D, A, 6);
+	Edge *e10 = new Edge(D, B, 2);
+	Edge *e11 = new Edge(D, E, 1);
+	Edge *e12 = new Edge(D, F, 2);
+	
+	E->AddAdjacency(A);
+	E->AddAdjacency(C);
+	E->AddAdjacency(F);
+	
+	Edge *e13 = new Edge(E, A, 2);
+	Edge *e14 = new Edge(E, C, 3);
+	Edge *e15 = new Edge(E, F, 4);
+	
+	F->AddAdjacency(B);
+	F->AddAdjacency(D);
+	F->AddAdjacency(E);
+	
+	Edge *e16 = new Edge(F, B, 3);
+	Edge *e17 = new Edge(F, D, 2);
+	Edge *e18= new Edge(F, E, 4);
+	
+	Graph *graph1 = new Graph(6);
+	graph1->AddVertex(A);
+	graph1->AddVertex(B);
+	graph1->AddVertex(C);
+	graph1->AddVertex(D);
+	graph1->AddVertex(E);
+	graph1->AddVertex(F);
+	
+	int test0[] = {1, 2, 4};
+	cout << testVertex(*graph1->GetVertex(0), test0) << endl;
+	
+	int test1[] = {0, 3, 5};
+	cout << testVertex(*graph1->GetVertex(1), test1) << endl;
+	
+	int test2[] = {0, 4};
+	cout << testVertex(*graph1->GetVertex(2), test2) << endl;
+	
+	int test3[] = {0, 1, 4, 5};
+	cout << testVertex(*graph1->GetVertex(3), test3) << endl;
+	
+	int test4[] = {0, 2, 5};
+	cout << testVertex(*graph1->GetVertex(4), test4) << endl;
+	
+	int test5[] = {1, 3, 4};
+	cout << testVertex(*graph1->GetVertex(5), test5) << endl;
+	
+
+
+
+	delete e1;
+	delete e2;
+	delete e3;
+	delete e4;
+	delete e5;
+	delete e6;
+	delete e7;
+	delete e8;
+	delete e9;
+	delete e10;
+	delete e11;
+	delete e12;
+	delete e13;
+	delete e14;
+	delete e15;
+	delete e16;
+	delete e17;
+	delete e18;
+	delete A;
+	delete B;
+	delete C;
+	delete D;
+	delete E;
+	delete F;
+	
+}
+
+
+
+
 int main(int argc, const char * argv[])
 {
 
@@ -227,6 +344,7 @@ int main(int argc, const char * argv[])
 	testDisjoint();
 	testVerticies();
 	testEdge();
+	testGraph();
 	
 	    return 0;
 }

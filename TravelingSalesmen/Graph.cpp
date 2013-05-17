@@ -17,6 +17,16 @@
  */
 Graph::Graph(int V){
 	this->verticies = V;
+	//edges = new int[V];
+	
+	for (int i = 0; i < V; i++) {
+		//edges[i] = *new int[V];
+		vector<int> e;
+		for(int j = 0; j < V; j++){
+			e.push_back(0);
+		}
+		edges.push_back(e);
+	}
 }
 
 /*  Function: Graph - Destructor
@@ -26,6 +36,7 @@ Graph::Graph(int V){
  */
 Graph::~Graph(){
 	
+	//delete[] edges;
 }
 
 /*  Function: AddVertex
@@ -37,6 +48,7 @@ Graph::~Graph(){
  */
 void Graph::AddVertex(Vertex *vertex){
 	adjacencies.push_back(vertex);
+	
 }
 
 /*  Function: GetVertex
@@ -58,18 +70,23 @@ Vertex* Graph::GetVertex(int identifier){
  *	Graph.
  */
 void Graph::AddEdge(Edge *edge){
-	map< int, vector <Edge*> >::iterator it;	
-	int id = (edge->GetSource())->GetId();
-	it = edges.find(id);
+	int s = (edge->GetSource())->GetId();
+	int d = (edge->GetDestination())->GetId();
 	
-	if(it != edges.end()){
-		vector<Edge*> e = edges.at(id);
-		e.push_back(edge);
-	}else{
-		vector<Edge*> e;
-		e.push_back(edge);
-		edges.insert(pair<int, vector <Edge*> >(id, e));
-	}
+	edges[s][d] = edge->GetWeight();
+	
+//	map< int, vector <Edge*> >::iterator it;	
+//	int id = (edge->GetSource())->GetId();
+//	it = edges.find(id);
+//	
+//	if(it != edges.end()){
+//		vector<Edge*> e = edges.at(id);
+//		e.push_back(edge);
+//	}else{
+//		vector<Edge*> e;
+//		e.push_back(edge);
+//		edges.insert(pair<int, vector <Edge*> >(id, e));
+//	}
 }
 
 /*  Function: OptimalTSP
@@ -192,11 +209,17 @@ void Graph::MinimumSpanningTree(){
  *	by traversing the vertices in depth first order of
  *	the sub-graph formed from the MST
  */
-double DepthFirstSearch(){
-	
+double Graph::DepthFirstSearch(){
+
 	int dist = 0;
+	
 //	initialise visited array to false
+	vector<bool> visited;
+	visited.assign (verticies,false);
+
 //	create empty stack
+	stack<Vertex*> stack;
+	
 //	push vertex 0 onto stack
 //	mark vertex 0 visited
 //	let current vertex = NULL
