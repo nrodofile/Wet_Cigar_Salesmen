@@ -221,23 +221,54 @@ double Graph::DepthFirstSearch(){
 	stack<Vertex*> stack;
 	
 //	push vertex 0 onto stack
+	stack.push(adjacencies[0]);
+	
 //	mark vertex 0 visited
-//	let current vertex = NULL
+	visited[0] = true;
+	
+//	current vertex = NULL
+	Vertex *current = NULL;
+	
 //	let previous vertex = NULL
+	Vertex *previous = NULL;
+	
 //	while stack not empty
+	while(!stack.empty()){
+
 //		current = pop from stack
+		current = stack.top();
+		stack.pop();
+		
 //		if previous not NULL
+		if(!previous){
 //			dist = dist + distance from previous to current
+			dist = dist + edges[previous->GetId()][current->GetId()];
+		}
 //		end if
+		
 //		for vertices adjacent to current
+		for (int v = 0; v < verticies; v++ ){
+
 //			if adjacent vertex not visited
+			if (!visited[v]){
+				
 //				push adjacent vertex onto stack
+				stack.push(adjacencies[v]);
+				
 //				mark adjacent vertex visited
-//			end if
-//		end for
+				visited[v] = true;
+			}
+		}
 //		previous = current
+		previous = current;
+	}
+
 //	end while
 //	dist = distance from current to vertex 0
-		return dist;
+	dist = dist = dist + edges[current->GetId()][adjacencies[0]->GetId()];
+	delete current;
+	delete previous;
+	
+	return dist;
 }
 
