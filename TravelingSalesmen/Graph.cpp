@@ -117,7 +117,8 @@ double Graph::OptimalTSP(){
  *				calculated using the given algorithm
  */
 double Graph::ApproximateTSP(){
-	return 0;
+	MinimumSpanningTree();
+	return DepthFirstSearch();
 }
 
 
@@ -205,7 +206,7 @@ void Graph::MinimumSpanningTree(){
 	DisjointSet *set = new DisjointSet(verticies);
 	
 
-	while(numEdges == (adjacencies.size()-1)){
+	while(numEdges != adjacencies.size()-1){
 //	2.Take the edge e with the smallest weight
 		Edge e = *SortedEdges[eIdx];
 		int s = e.GetSource()->GetId(); //Source
@@ -245,8 +246,8 @@ double Graph::DepthFirstSearch(){
 	int dist = 0;
 	
 //	initialise visited array to false
-	vector<bool> visited;
-	visited.assign (verticies,false);
+	vector<int> visited;
+	visited.assign(adjacencies.size(), 0);
 
 //	create empty stack
 	stack<Vertex*> stack;
@@ -271,7 +272,7 @@ double Graph::DepthFirstSearch(){
 		stack.pop();
 		
 //		if previous not NULL
-		if(!previous){
+		if(previous != NULL){
 			dist = dist + GetWeight(previous, current);
 
 			//			dist = dist + distance from previous to current
@@ -279,19 +280,22 @@ double Graph::DepthFirstSearch(){
 			//					[current->GetId()])->GetWeight();
 		}
 //		end if
-		
-//		for vertices adjacent to current
-		vector<Edge*> e = MST[current->GetId()];
-		for (int v = 0; v < MST[current->GetId()].size(); v++ ){
 
+//		for vertices adjacent to current
+
+		int cID = current->GetId();
+		vector<Edge*> e = MST[cID];
+		for (int v = 0; v < MST[cID].size(); v++ ){
+			
+			int dID = (e[v]->GetDestination())->GetId();
 //			if adjacent vertex not visited
-			if (!visited[(e[v]->GetDestination())->GetId()]){
+			if (!visited[dID]){
 				
 //				push adjacent vertex onto stack
-				stack.push(adjacencies[v]);
+				stack.push(e[v]->GetDestination());
 				
 //				mark adjacent vertex visited
-				visited[v] = true;
+				visited[dID] = true;
 			}
 		}
 //		previous = current
@@ -304,8 +308,7 @@ double Graph::DepthFirstSearch(){
 //	dist = dist = dist + (edges[current->GetId()]
 //								[adjacencies[0]->GetId()])->GetWeight();
 	delete current;
-	delete previous;
-	
+
 	return dist;
 }
 
@@ -336,7 +339,7 @@ int Graph::GetWeight(Vertex *p, Vertex *c){
 
 void Graph::SortEdges(){
 	for(int i = 0; i< adjacencies.size(); i++){
-		for (int j = 0; j < SortedEdges.size(); j++){
+		for (int j = 0; j < edges[i].size(); j++){
 			SortedEdges.push_back(edges[i][j]);
 		}
 	}

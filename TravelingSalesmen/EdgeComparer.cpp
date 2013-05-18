@@ -9,5 +9,5 @@
 #include "EdgeComparer.h"
 
 bool EdgeComparer::operator()(Edge *first, Edge *second){
-	return (first->GetWeight() == second->GetWeight());
+	return (first->GetWeight() < second->GetWeight());
 }
