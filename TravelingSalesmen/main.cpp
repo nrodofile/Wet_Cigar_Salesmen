@@ -301,6 +301,8 @@ void testGraph(){
 	int test5[] = {1, 3, 4};
 	cout << testVertex(*graph1->GetVertex(5), test5) << endl;
 	
+	graph1->AddEdge(e1);
+	graph1->AddEdge(e2);
 
 
 
@@ -328,10 +330,78 @@ void testGraph(){
 	delete D;
 	delete E;
 	delete F;
-	
+	delete graph1;
 }
 
+void testGraph2(){
+	
+	cout << endl << "Edge Graph2" << endl;
+	vector<Vertex*> v;
+	vector<Edge*> ed;
+	Graph *g1 = new Graph(4);
+	
+	Vertex *A = new Vertex(0);
+	Vertex *B = new Vertex(1);
+	Vertex *C = new Vertex(2);
+	Vertex *D = new Vertex(3);
+	
+	A->AddAdjacency(B);
+	A->AddAdjacency(C);
+	A->AddAdjacency(D);
+	
+	B->AddAdjacency(A);
+	B->AddAdjacency(C);
+	B->AddAdjacency(D);
+	
+	C->AddAdjacency(A);
+	C->AddAdjacency(B);
+	C->AddAdjacency(D);
+	
+	D->AddAdjacency(A);
+	D->AddAdjacency(B);
+	D->AddAdjacency(C);
+	
+		v.push_back(A);
+		v.push_back(B);
+		v.push_back(C);
+		v.push_back(D);
+	int d[] = {7,2,6,7,6,4,2,6,3,6,4,3};
+	int dist = 0;
+	for(int i = 0; i < v.size(); i++){
+		vector<Vertex*> v2 = v[i]->GetAdjacencies();
+		g1->AddVertex(v[i]);
+		for(int j = 0; j < v2.size(); j++){
+			Edge *e = new Edge(v[i], v2[j], d[dist++]);
+			g1->AddEdge(e);
+			ed.push_back(e);
+			
+		}
+	}
+	
+	cout << testInt(g1->GetWeight(A, B), 7) << endl;
+	cout << testInt(g1->GetWeight(D, B), 4) << endl;
+	cout << testInt(g1->GetWeight(C, B), 6) << endl;
+	cout << testInt(g1->GetWeight(A, C), 2) << endl;
+	
+	cout << testInt(g1->GetWeight(B, A), 7) << endl;
+	cout << testInt(g1->GetWeight(B, C), 6) << endl;
+	cout << testInt(g1->GetWeight(B, D), 4) << endl;
+	cout << testInt(g1->GetWeight(C, A), 2) << endl;
 
+
+	
+	
+	delete A;
+	delete B;
+	delete C;
+	delete D;
+	delete g1;
+	for(int i = 0; i< ed.size(); i++){
+		delete ed[i];
+	}
+
+
+}
 
 
 int main(int argc, const char * argv[])
@@ -345,6 +415,7 @@ int main(int argc, const char * argv[])
 	testVerticies();
 	testEdge();
 	testGraph();
+	testGraph2();
 	
 	    return 0;
 }

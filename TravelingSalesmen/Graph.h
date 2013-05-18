@@ -13,19 +13,30 @@
 #include <map>
 #include <stack>
 #include <vector>
+#include <algorithm>
 #include "Vertex.h"
 #include "Edge.h"
+#include "DisjointSet.h"
+#include "EdgeComparer.h"
 
+
+
+#define INFINATE -1
 
 class Graph {
 	
 	vector<Vertex*> adjacencies;
 	//map< int, vector <Edge*> > edges;
-	vector< vector <int> > edges;
+	//vector< vector <int> > edges;
+	vector< vector <Edge*> > edges;
+	vector <Edge*> SortedEdges;
 	//int *edges;
+	vector< vector<Edge*> > MST;
 	int verticies;
 
 public:
+	
+	int GetWeight(Vertex*, Vertex*);
 	
 /*  Function: Graph - Constructor
  *--------------------------------------------------
@@ -130,6 +141,10 @@ private:
  *	the sub-graph formed from the MST
  */
 	double DepthFirstSearch();
+	
+//	int GetWeight(Vertex*, Vertex*);
+	void SortEdges();
+	int GetIndex(Vertex* ,vector<Vertex*>);
 
 };
 

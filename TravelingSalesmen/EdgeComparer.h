@@ -14,6 +14,7 @@
 
 class EdgeComparer{
 	
+public:
 /*	Function: operator
  *--------------------------------------------------
  *	Usage: bool IsLessThan =
