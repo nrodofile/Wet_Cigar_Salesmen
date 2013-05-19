@@ -118,7 +118,12 @@ double Graph::OptimalTSP(){
  */
 double Graph::ApproximateTSP(){
 	MinimumSpanningTree();
-	return DepthFirstSearch();
+	double TSP = DepthFirstSearch();
+	for (int i = 0 ; i < MST.size(); ++i){
+		cout << MST[i]->ToString() << endl;
+	}
+	cout << endl;
+	return TSP;
 }
 
 
@@ -204,23 +209,29 @@ void Graph::MinimumSpanningTree(){
 	int eIdx = 0;
 	SortEdges();
 	DisjointSet *set = new DisjointSet(verticies);
-	
+	for (int i = 0; i < adjacencies.size(); i++){
+		Vertex *v = adjacencies[i];
+		v->ClearAdjacentcies();
+		MST.push_back(v);
+	}
 
 	while(numEdges != adjacencies.size()-1){
 //	2.Take the edge e with the smallest weight
 		Edge e = *SortedEdges[eIdx];
 		int s = e.GetSource()->GetId(); //Source
-		int d = e.GetDestination()->GetId(); //Destination 
+		int d = e.GetDestination()->GetId(); //Destination
+		
 //		a) If e connects two vertices in different
 		if (!set->SameComponent(s,d)){
+			
 //		clusters, then e is added to the MST and the
 //		two clusters connected by e are merged into a
 //		single cluster
+			
 			set->Union(s, d);
 			numEdges++;
-			vector<Edge*> adjacent;
-			adjacent.push_back(SortedEdges[eIdx]);
-			MST.push_back(adjacent);
+			MST[s]->AddAdjacency(MST[d]);
+			MST[d]->AddAdjacency(MST[s]);
 			
 		}
 //		b) If e connects two vertices which are already
@@ -228,6 +239,8 @@ void Graph::MinimumSpanningTree(){
 		eIdx ++;
 	}
 //	3.Continue until N – 1 edges are selected
+	
+	
 	delete set;
 
 }
@@ -253,7 +266,7 @@ double Graph::DepthFirstSearch(){
 	stack<Vertex*> stack;
 	
 //	push vertex 0 onto stack
-	stack.push(adjacencies[0]);
+	stack.push(MST[0]);
 	
 //	mark vertex 0 visited
 	visited[0] = true;
@@ -273,41 +286,33 @@ double Graph::DepthFirstSearch(){
 		
 //		if previous not NULL
 		if(previous != NULL){
+			
+//			dist = dist + distance from previous to current
 			dist = dist + GetWeight(previous, current);
 
-			//			dist = dist + distance from previous to current
-			//dist = dist + (edges[previous->GetId()]
-			//					[current->GetId()])->GetWeight();
 		}
-//		end if
 
 //		for vertices adjacent to current
-
-		int cID = current->GetId();
-		vector<Edge*> e = MST[cID];
-		for (int v = 0; v < MST[cID].size(); v++ ){
+		vector<Vertex*> adjacent = current->GetAdjacencies();
+		for(int v = 0; v < adjacent.size(); ++v){
 			
-			int dID = (e[v]->GetDestination())->GetId();
 //			if adjacent vertex not visited
-			if (!visited[dID]){
-				
+			if(!visited[adjacent[v]->GetId()]){
 //				push adjacent vertex onto stack
-				stack.push(e[v]->GetDestination());
+				stack.push(adjacent[v]);
 				
 //				mark adjacent vertex visited
-				visited[dID] = true;
+				visited[adjacent[v]->GetId()] = true;
 			}
 		}
+	
 //		previous = current
 		previous = current;
 	}
 
-//	end while
+
 //	dist = distance from current to vertex 0
 	dist = dist + GetWeight(current, adjacencies[0]);
-//	dist = dist = dist + (edges[current->GetId()]
-//								[adjacencies[0]->GetId()])->GetWeight();
-	delete current;
 
 	return dist;
 }
@@ -323,19 +328,6 @@ int Graph::GetWeight(Vertex *p, Vertex *c){
 	}
 	return INFINATE;
 }
-
-//int Graph::GetWeight(Vertex *p, Vertex *c){
-//	map< int, vector <Edge*> >::iterator it;
-//	it = edges.find(p->GetId());
-//	vector<Edge*> e = it->second;
-//
-//	for(int i = 0; i < e.size(); ++i){
-//		if((e[i]->GetDestination())->GetId() == c->GetId()){
-//			return e[i]->GetWeight();
-//		}
-//	}
-//	return NULL;
-//}
 
 void Graph::SortEdges(){
 	for(int i = 0; i< adjacencies.size(); i++){

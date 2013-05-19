@@ -67,6 +67,8 @@ public:
  */
 	vector<Vertex*> GetAdjacencies();
 	
+	void ClearAdjacentcies();
+	
 /*  Function: ToString
  *--------------------------------------------------
  *	Usage: vertex->ToString()

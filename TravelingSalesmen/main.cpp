@@ -394,15 +394,92 @@ void testGraph2(){
 	for(int i = 0; i< ed.size(); i++){
 		delete ed[i];
 	}
-//	delete A;
-//	delete B;
-//	delete C;
-//	delete D;
+	delete A;
+	delete B;
+	delete C;
+	delete D;
 
 
 
 
 }
+
+
+void testGraph3(){
+	
+	cout << endl << "Edge Graph3" << endl;
+	vector<Vertex*> v;
+	vector<Edge*> ed;
+	Graph *g1 = new Graph(5);
+	
+	Vertex *A = new Vertex(0);
+	Vertex *B = new Vertex(1);
+	Vertex *C = new Vertex(2);
+	Vertex *D = new Vertex(3);
+	Vertex *E = new Vertex(4);
+	
+	A->AddAdjacency(B);
+	A->AddAdjacency(C);
+	A->AddAdjacency(D);
+	A->AddAdjacency(E);
+	
+	B->AddAdjacency(A);
+	B->AddAdjacency(C);
+	B->AddAdjacency(D);
+	B->AddAdjacency(E);
+	
+	C->AddAdjacency(A);
+	C->AddAdjacency(B);
+	C->AddAdjacency(D);
+	C->AddAdjacency(E);
+	
+	
+	D->AddAdjacency(A);
+	D->AddAdjacency(B);
+	D->AddAdjacency(C);
+	D->AddAdjacency(E);
+	
+	E->AddAdjacency(A);
+	E->AddAdjacency(B);
+	E->AddAdjacency(C);
+	E->AddAdjacency(D);
+	
+	
+	v.push_back(A);
+	v.push_back(B);
+	v.push_back(C);
+	v.push_back(D);
+	v.push_back(E);
+	
+	int d[] = {11,3,10,14,11,12,4,3,3,12,5,2,10,4,5,7 };
+	int dist = 0;
+	for(int i = 0; i < v.size(); i++){
+		vector<Vertex*> v2 = v[i]->GetAdjacencies();
+		g1->AddVertex(v[i]);
+		for(int j = 0; j < v2.size(); j++){
+			Edge *e = new Edge(v[i], v2[j], d[dist++]);
+			g1->AddEdge(e);
+			ed.push_back(e);
+			
+		}
+	}
+	
+	cout << g1->ApproximateTSP();
+	
+	delete g1;
+	for(int i = 0; i< ed.size(); i++){
+		delete ed[i];
+	}
+	delete A;
+	delete B;
+	delete C;
+	delete D;
+	delete E;
+	
+	
+	
+}
+
 
 
 int main(int argc, const char * argv[])
@@ -417,6 +494,7 @@ int main(int argc, const char * argv[])
 	testEdge();
 	testGraph();
 	testGraph2();
+	testGraph3();
 	
 	    return 0;
 }

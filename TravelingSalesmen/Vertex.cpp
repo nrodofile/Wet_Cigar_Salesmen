@@ -64,6 +64,10 @@ vector<Vertex*> Vertex::GetAdjacencies(){
 	return adjacent;
 }
 
+void Vertex::ClearAdjacentcies(){
+	adjacent.clear();
+}
+
 /*  Function: ToString
  *--------------------------------------------------
  *	Usage: vertex->ToString()
