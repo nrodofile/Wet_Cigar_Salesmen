@@ -388,7 +388,8 @@ void testGraph2(){
 	cout << testInt(g1->GetWeight(B, D), 4) << endl;
 	cout << testInt(g1->GetWeight(C, A), 2) << endl;
 
-	cout << g1->ApproximateTSP();
+	cout << g1->ApproximateTSP() << endl;
+	cout << g1->OptimalTSP() << endl;
 	
 	delete g1;
 	for(int i = 0; i< ed.size(); i++){
@@ -464,7 +465,8 @@ void testGraph3(){
 		}
 	}
 	
-	cout << g1->ApproximateTSP();
+	cout << g1->ApproximateTSP() << endl;
+	cout << g1->OptimalTSP() << endl;
 	
 	delete g1;
 	for(int i = 0; i< ed.size(); i++){

@@ -108,26 +108,37 @@ void Graph::AddEdge(Edge *edge){
 double Graph::OptimalTSP(){
 	
 	//	create array of bool named visited with size = numVertices
-	//vector<int> visited;
+	vector<int> visited;
 	
-	bool *visited;
+	//bool *visited;
 	
 	//	initialise visited to false
-	visited = new bool[verticies];
+	//visited = new bool[verticies];
+	visited.assign(verticies, 0);
 	
-	for (int i = 0; i < verticies; i++) {
-		visited[i] = false;
-	}
+	//for (int i = 0; i < verticies; i++) {
+	//	visited[i] = false;
+	//}
 	
 	//	set first element of visited to true
 	visited[0] = true;
 	
 	//	result = TSPBruteForce(0, visited)
-	double result = TSPBruteForce(0, visited);
+	//double result = TSPBruteForce(0, visited);
 	
-	delete visited;
+	//delete visited;
 	
-	return result;
+	//-------
+	//	Create memoisation table [N][(1 << N)]
+	//	Set all values in table to UNSET
+	for(int b = 0; b < verticies; b++){
+		bitset<23> t;
+		MT.push_back(t);
+	}
+	
+	double result2 = TSPDP(0, 1);
+	
+	return result2;
 }
 
 /*  Function: ApproximateTSP
@@ -156,26 +167,38 @@ double Graph::ApproximateTSP(){
  *
  *  Returns:
  */
-double Graph::TSPBruteForce(int current, bool* visited){
+double Graph::TSPBruteForce(int current, vector<int> visited){
 	double minDistance; 
 	
-//	TSPBruteForce(current, visited):
-	
 //	if all elements in visited are true
-	if (visited){
+	bool visitedAll = true; 
+	for (int v = 0; v < verticies; v++){
+		if(!visited[v]){
+			visitedAll = false;
+			break;
+		}
+	}
+	
+	if (visitedAll){
 		
 //		return distance from current to 0
 		return  GetWeight(adjacencies[current], adjacencies[0]);
 	}
 //	make a copy of visited
-	bool* visitedCp = new bool[verticies];
-	for (int b = 0; b < sizeof(visited); b++)visitedCp[b] = visited[b];
+	vector<int> visitedCp;
+	visitedCp.assign(verticies, 0);
+	//bool* visitedCp = new bool[verticies];
+	
+	for (int b = 0; b < verticies; b++){
+		visitedCp[b] = visited[b];
+	}
 		
 //	set minDistance to INFINITY
-	minDistance = INFINATE;
+	minDistance = INFINATY;
 	
 //	for adjacent from 0 to numVertices-1
-	for (int a = 0; a < verticies-1; ++a){
+	//NOTE : if it doesnt look at all adjacent 
+	for (int a = 0; a < verticies; ++a){
 		
 //		if current != adjacent AND adjacent not visited
 		if (current != adjacencies[a]->GetId() && !visited[a]){
@@ -190,7 +213,9 @@ double Graph::TSPBruteForce(int current, bool* visited){
 						TSPBruteForce(adjacencies[a]->GetId(),visitedCp);
 
 //			minDistance = minimum(minDistance, dist)
-			if(minDistance > dist) minDistance = dist;
+			if(minDistance > dist){
+				minDistance = dist;
+			}
 			
 //			set adjacent in copy of visited to false
 			visitedCp[a] = false;
@@ -209,31 +234,51 @@ double Graph::TSPBruteForce(int current, bool* visited){
  *
  *  Returns:
  */
-double Graph::TSPDP(int, int){
+double Graph::TSPDP(int current, int bitmask){
 	
-
-//	Create memoisation table [N][(1 << N)]
-//	Set all values in table to UNSET
-//	result = TSPDP(0, 1)
 //	TSPDP(current, bitmask):
 //	if table[current][bitmask] is not UNSET
+	if (MT[current][bitmask]){
+		
 //		return table[current][bitmask]
+		return MT[current][bitmask];
+	}
+
 //	if bitmask == ((1 << N) – 1)
-//			return distance from current to 0
+	if(bitmask == (1 << verticies) - 1){
+
+//		return distance from current to 0
+		return GetWeight(adjacencies[current], adjacencies[0]);
+	}
+
 //	minDistance = INFINTY
+	double minDistance = INFINATY;
+	
 //	for adjacent from 0 to N-1
+	for (int a = 0; a < verticies; a++){
+		
 //		if current != adjacent AND
-//			((bitmask & (1 << adjacent)) == 0)
+		//	((bitmask & (1 << adjacent)) == 0)
+		if (adjacencies[current] != adjacencies[a] &&
+			((bitmask & (1 << a)) == 0)){
+			
 //			dist = distance from current to adjacent +
-//			TSPDP(adjacent, (bitmask | (1 << adjacent)))
+//			TSPDP(adjacent, (bitmask | (1 << adjacent)))			
+			double dist = GetWeight(adjacencies[current], adjacencies[a])+
+									TSPDP(a, bitmask | (1 << a));
+			
 //			minDistance = min(minDistance, dist)
-//		endif
-//	endfor
+			if(minDistance > dist){
+				minDistance = dist;
+			}
+		}
+	}
+	
 //	table[current][bitmask] = minDistance
+	MT[current][bitmask] = minDistance;
+	
 //	return minDistance
-	
-	
-	return 0;
+	return minDistance;
 }
 
 /*  Function: MinimumSpanningTree
@@ -367,7 +412,7 @@ double Graph::GetWeight(Vertex *p, Vertex *c){
 			return e[j]->GetWeight();
 		}
 	}
-	return INFINATE;
+	return INFINATY;
 }
 
 void Graph::SortEdges(){

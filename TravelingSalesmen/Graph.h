@@ -14,6 +14,7 @@
 #include <stack>
 #include <vector>
 #include <algorithm>
+#include <bitset>
 #include "Vertex.h"
 #include "Edge.h"
 #include "DisjointSet.h"
@@ -21,14 +22,15 @@
 
 
 
-#define INFINATE -1
+#define INFINATY 999999999
 
 class Graph {
 	
 	vector<Vertex*> adjacencies;
 	vector< vector <Edge*> > edges;
 	vector <Edge*> SortedEdges;
-	vector<Vertex*> MST;
+	vector<Vertex*> MST;	//Minimum Spanning Tree
+	vector<bitset<23>> MT; //memoisation table
 	int verticies;
 
 public:
@@ -106,7 +108,7 @@ private:
  *
  *  Returns:
  */
-	double TSPBruteForce(int, bool*);
+	double TSPBruteForce(int, vector<int>);
 	
 /*  Function: TSPDp
  *--------------------------------------------------
