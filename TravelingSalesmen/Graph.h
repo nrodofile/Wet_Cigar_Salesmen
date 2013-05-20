@@ -33,7 +33,7 @@ class Graph {
 
 public:
 	
-	int GetWeight(Vertex*, Vertex*);
+	double GetWeight(Vertex*, Vertex*);
 	
 /*  Function: Graph - Constructor
  *--------------------------------------------------

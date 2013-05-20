@@ -106,7 +106,28 @@ void Graph::AddEdge(Edge *edge){
  *  Returns:	Length of the optimal TSP tour
  */
 double Graph::OptimalTSP(){
-	return 0;
+	
+	//	create array of bool named visited with size = numVertices
+	//vector<int> visited;
+	
+	bool *visited;
+	
+	//	initialise visited to false
+	visited = new bool[verticies];
+	
+	for (int i = 0; i < verticies; i++) {
+		visited[i] = false;
+	}
+	
+	//	set first element of visited to true
+	visited[0] = true;
+	
+	//	result = TSPBruteForce(0, visited)
+	double result = TSPBruteForce(0, visited);
+	
+	delete visited;
+	
+	return result;
 }
 
 /*  Function: ApproximateTSP
@@ -135,29 +156,49 @@ double Graph::ApproximateTSP(){
  *
  *  Returns:
  */
-double Graph::TSPBruteForce(int, bool*){
-//	create array of bool named visited with size = numVertices
-//	initialise visited to false
-//	set first element of visited to true
-//	result = TSPBruteForce(0, visited)
-//	TSPBruteForce(current, visited):
-//	if all elements in visited are true
-//		return distance from current to 0
-//		make a copy of visited
-//		set minDistance to INFINITY
-//		for adjacent from 0 to numVertices-1
-//			if current != adjacent AND adjacent not visited
-//				set adjacent in copy of visited to true
-//				dist = distance from current to adjacent +
-//				TSPBruteForce(adjacent, copy of visited)
-//				minDistance = minimum(minDistance, dist)
-//				set adjacent in copy of visited to false
-//			end if
-//		end for
-//		return minDistance
-//	end
+double Graph::TSPBruteForce(int current, bool* visited){
+	double minDistance; 
 	
-	return 0;
+//	TSPBruteForce(current, visited):
+	
+//	if all elements in visited are true
+	if (visited){
+		
+//		return distance from current to 0
+		return  GetWeight(adjacencies[current], adjacencies[0]);
+	}
+//	make a copy of visited
+	bool* visitedCp = new bool[verticies];
+	for (int b = 0; b < sizeof(visited); b++)visitedCp[b] = visited[b];
+		
+//	set minDistance to INFINITY
+	minDistance = INFINATE;
+	
+//	for adjacent from 0 to numVertices-1
+	for (int a = 0; a < verticies-1; ++a){
+		
+//		if current != adjacent AND adjacent not visited
+		if (current != adjacencies[a]->GetId() && !visited[a]){
+			
+//			set adjacent in copy of visited to true
+			visitedCp[a] = true;
+			
+//			dist = distance from current to adjacent +
+//			TSPBruteForce(adjacent, copy of visited)
+			double dist =
+				GetWeight(adjacencies[current],adjacencies[a]) +
+						TSPBruteForce(adjacencies[a]->GetId(),visitedCp);
+
+//			minDistance = minimum(minDistance, dist)
+			if(minDistance > dist) minDistance = dist;
+			
+//			set adjacent in copy of visited to false
+			visitedCp[a] = false;
+		}
+	}
+//	return minDistance
+	return minDistance;
+
 }
 
 /*  Function: TSPDp
@@ -317,7 +358,7 @@ double Graph::DepthFirstSearch(){
 	return dist;
 }
 
-int Graph::GetWeight(Vertex *p, Vertex *c){
+double Graph::GetWeight(Vertex *p, Vertex *c){
 	vector<Edge*> e;
 	e = edges[GetIndex(p, adjacencies)];
 	
