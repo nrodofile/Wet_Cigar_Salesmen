@@ -197,8 +197,7 @@ double Graph::TSPBruteForce(int current, vector<int> visited){
 	minDistance = INFINATY;
 	
 //	for adjacent from 0 to numVertices-1
-	//NOTE : if it doesnt look at all adjacent 
-	for (int a = 0; a < verticies; ++a){
+	for (int a = 0; a <= verticies-1; ++a){
 		
 //		if current != adjacent AND adjacent not visited
 		if (current != adjacencies[a]->GetId() && !visited[a]){
@@ -255,7 +254,7 @@ double Graph::TSPDP(int current, int bitmask){
 	double minDistance = INFINATY;
 	
 //	for adjacent from 0 to N-1
-	for (int a = 0; a < verticies; a++){
+	for (int a = 0; a <= verticies-1; a++){
 		
 //		if current != adjacent AND
 		//	((bitmask & (1 << adjacent)) == 0)
