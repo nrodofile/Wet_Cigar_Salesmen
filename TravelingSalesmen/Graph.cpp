@@ -19,6 +19,21 @@ Graph::Graph(int V){
 	this->verticies = V;
 	//edges = new int[V];
 	
+//	p2DArray = new double**[HEIGHT];
+//	for (int i = 0; i < HEIGHT; ++i) {
+//		p2DArray[i] = new double*[WIDTH];
+//		
+//		for (int j = 0; j < WIDTH; ++j)
+//			p2DArray[i][j] = new double[DEPTH];
+//	}
+	
+	vert = new double *[V];
+	for (int i = 0; i < V; i++) {
+		vert[i] = new double[V];
+		for (int j = 0; j < V; j++) {
+			vert[i][j] = 0;
+		}
+	}
 //	for (int i = 0; i < V; i++) {
 //		//edges[i] = *new int[V];
 //		vector<Edge> e;
@@ -49,8 +64,6 @@ Graph::~Graph(){
 void Graph::AddVertex(Vertex *vertex){
 	vector<Edge*> e;
 	adjacencies.push_back(vertex);
-	edges.push_back(e);
-	
 }
 
 /*  Function: GetVertex
@@ -72,31 +85,17 @@ Vertex* Graph::GetVertex(int identifier){
  *	Graph.
  */
 void Graph::AddEdge(Edge *edge){
-//	int s = (edge->GetSource())->GetId();
-//	int d = (edge->GetDestination())->GetId();
+	int s = (edge->GetSource())->GetId();
+	int d = (edge->GetDestination())->GetId();
 	
-	int s = GetIndex(edge->GetSource(), adjacencies);
-	vector<Edge*> e = edges[s];
-	e.push_back(edge);
-	edges[s] = e;
+//	int s = GetIndex(edge->GetSource(), adjacencies);
+//	vector<Edge*> e = edges[s];
+//	e.push_back(edge);
+//	edges[s] = e;
 	
-	//edges[s][d] = edge->GetWeight();
-	//edges[s][d] = edge;
+	vert[s][d] = edge->GetWeight();
+	edges.push_back(edge);
 
-//	
-//	map< int, vector <Edge*> >::iterator it;	
-//	int id = (edge->GetSource())->GetId();
-//	it = edges.find(id);
-//	vector<Edge*> e;
-//	if(it != edges.end()){
-//		vector<Edge*> e = edges.at(id);
-//		e.push_back(edge);
-//		it->second = e;
-//	}else{
-//		vector<Edge*> e;
-//		e.push_back(edge);
-//		edges.insert(pair<int, vector <Edge*> >(id, e));
-//	}
 }
 
 /*  Function: OptimalTSP
@@ -208,7 +207,7 @@ double Graph::TSPBruteForce(int current, vector<int> visited){
 //			dist = distance from current to adjacent +
 //			TSPBruteForce(adjacent, copy of visited)
 			double dist =
-				GetWeight(adjacencies[current],adjacencies[a]) +
+				vert[current][adjacencies[a]->GetId()] +
 						TSPBruteForce(adjacencies[a]->GetId(),visitedCp);
 
 //			minDistance = minimum(minDistance, dist)
@@ -247,7 +246,7 @@ double Graph::TSPDP(int current, int bitmask){
 	if(bitmask == (1 << verticies) - 1){
 
 //		return distance from current to 0
-		return GetWeight(adjacencies[current], adjacencies[0]);
+		return vert[current][adjacencies[0]->GetId()];
 	}
 
 //	minDistance = INFINTY
@@ -263,7 +262,7 @@ double Graph::TSPDP(int current, int bitmask){
 			
 //			dist = distance from current to adjacent +
 //			TSPDP(adjacent, (bitmask | (1 << adjacent)))			
-			double dist = GetWeight(adjacencies[current], adjacencies[a])+
+			double dist = vert[current][adjacencies[a]->GetId()] +
 									TSPDP(a, bitmask | (1 << a));
 			
 //			minDistance = min(minDistance, dist)
@@ -292,7 +291,7 @@ void Graph::MinimumSpanningTree(){
 //	set
 	int numEdges = 0;
 	int eIdx = 0;
-	SortEdges();
+	sort(edges.begin(), edges.end(), EdgeComparer());
 	DisjointSet *set = new DisjointSet(verticies);
 	for (int i = 0; i < adjacencies.size(); i++){
 		Vertex *v = adjacencies[i];
@@ -302,9 +301,9 @@ void Graph::MinimumSpanningTree(){
 
 	while(numEdges != adjacencies.size()-1){
 //	2.Take the edge e with the smallest weight
-		Edge e = *SortedEdges[eIdx];
-		int s = e.GetSource()->GetId(); //Source
-		int d = e.GetDestination()->GetId(); //Destination
+
+		int s = edges[eIdx]->GetSource()->GetId(); //Source
+		int d = edges[eIdx]->GetDestination()->GetId(); //Destination
 		
 //		a) If e connects two vertices in different
 		if (!set->SameComponent(s,d)){
@@ -373,7 +372,7 @@ double Graph::DepthFirstSearch(){
 		if(previous != NULL){
 			
 //			dist = dist + distance from previous to current
-			dist = dist + GetWeight(previous, current);
+			dist = dist + vert[previous->GetId()][current->GetId()];
 
 		}
 
@@ -397,30 +396,14 @@ double Graph::DepthFirstSearch(){
 
 
 //	dist = distance from current to vertex 0
-	dist = dist + GetWeight(current, adjacencies[0]);
+	dist = dist + vert[previous->GetId()][adjacencies[0]->GetId()];
 
 	return dist;
 }
 
 double Graph::GetWeight(Vertex *p, Vertex *c){
-	vector<Edge*> e;
-	e = edges[GetIndex(p, adjacencies)];
 	
-	for(int j = 0; j < e.size(); j++){
-		if((e[j]->GetDestination())->GetId() == c->GetId()){
-			return e[j]->GetWeight();
-		}
-	}
-	return INFINATY;
-}
-
-void Graph::SortEdges(){
-	for(int i = 0; i< adjacencies.size(); i++){
-		for (int j = 0; j < edges[i].size(); j++){
-			SortedEdges.push_back(edges[i][j]);
-		}
-	}
-	sort(SortedEdges.begin(), SortedEdges.end(), EdgeComparer());
+	return vert[p->GetId()][c->GetId()];
 }
 
 int Graph::GetIndex(Vertex *v, vector<Vertex*> a){

@@ -27,8 +27,8 @@
 class Graph {
 	
 	vector<Vertex*> adjacencies;
-	vector< vector <Edge*> > edges;
-	vector <Edge*> SortedEdges;
+	vector <Edge*> edges;
+	double **vert;
 	vector<Vertex*> MST;	//Minimum Spanning Tree
 	vector<bitset<23>> MT; //memoisation table
 	int verticies;
