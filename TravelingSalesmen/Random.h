@@ -27,7 +27,7 @@ public:
 	 *  height.
 	 *  Initialises random generator
 	 */
-    Random(int low, int high);
+    Random();
    
 	/*
 	 *  Function: Random Destructor
@@ -47,11 +47,9 @@ public:
 	 *  Returns:    RandomInt derived from high and low
 	 *--------------------------------------------------
 	 */
-    int RandomInt();
+    int RandomInt(int low, int high);
 	
 private:
-    int low;	// Minimum random number generated
-    int high;	// Maximum random number
 	
 	/*
 	 *  Function: Randomise

@@ -20,7 +20,7 @@
 #include "DisjointSet.h"
 #include "EdgeComparer.h"
 
-#define INFINATY 100000000
+#define INFINATY 2147483647
 #define OPTIMAL_MAX 22
 #define TSPDP_MAX 11
 #define FIRST 0

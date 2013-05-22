@@ -77,8 +77,9 @@ void Graph::AddEdge(Edge *edge){
 	int d = (edge->GetDestination())->GetId();
 		
 	adjMatrix[s][d] = edge->GetWeight();
+	
 	edges.push_back(edge);
-
+	
 }
 
 /*  Function: OptimalTSP
@@ -133,12 +134,6 @@ double Graph::OptimalTSP(){
 double Graph::ApproximateTSP(){
 	MinimumSpanningTree();
 	double TSP = DepthFirstSearch();
-	
-	for (int i = FIRST ; i < MST.size(); ++i){
-		cout << MST[i]->ToString() << endl;
-	}/////TEST
-	
-	cout << endl;
 	return TSP;
 }
 
@@ -198,7 +193,6 @@ double Graph::TSPBruteForce(int current, bool* visited){
 	
 	delete[] visitedCp;
 	
-//	return minDistance
 	return minDistance;
 
 }
@@ -257,23 +251,22 @@ double Graph::TSPDP(int current, int bitmask){
  */
 void Graph::MinimumSpanningTree(){
 	int numEdges = START;
-	int eIdx = FIRST;
+	int e = FIRST;
 	
 	//	1.Place each vertex in its own cluster or set
-	sort(edges.begin(), edges.end(), EdgeComparer());
 	DisjointSet *set = new DisjointSet(verticies);
 	
 	for (int i = FIRST; i < adjacencies.size(); i++){
 		Vertex *v = adjacencies[i];
-		v->ClearAdjacentcies();
 		MST.push_back(v);
 	}
-
+	
+	sort(edges.begin(), edges.end(), EdgeComparer());
 	while(numEdges != verticies-1){
 //	2.Take the edge e with the smallest weight
 
-		int s = edges[eIdx]->GetSource()->GetId(); //Source
-		int d = edges[eIdx]->GetDestination()->GetId(); //Destination
+		int s = edges[e]->GetSource()->GetId(); //Source
+		int d = edges[e]->GetDestination()->GetId(); //Destination
 		
 //		a) If e connects two vertices in different clusters, 
 		if (!set->SameComponent(s,d)){
@@ -284,18 +277,17 @@ void Graph::MinimumSpanningTree(){
 			
 			set->Union(s, d);
 			numEdges++;
-			MST[s]->AddAdjacency(MST[d]);
-			MST[d]->AddAdjacency(MST[s]);
 			
+			adjacencies[s]->AddAdjacency(adjacencies[d]);
+			adjacencies[d]->AddAdjacency(adjacencies[s]);
 		}
 		
 //		b) If e connects two vertices which are already
 //		in the same cluster, ignore it
-		eIdx ++;
+		e  ++;
 		
 //	3.Continue until N – 1 edges are selected
-	}
-	
+	}	
 	delete set;
 }
 
@@ -310,32 +302,61 @@ void Graph::MinimumSpanningTree(){
  */
 double Graph::DepthFirstSearch(){
 
-	int dist = START;
+	//dist = 0
+	double dist = START;
 	
-	vector<bool> visited;
+	//   initialise visited array to false
+	vector<int> visited;
 	visited.assign(adjacencies.size(), false);
 
+	// create empty stack
 	stack<Vertex*> stack;
+	
+	// push vertex 0 onto stack
 	stack.push(MST[FIRST]);
+	
+	// mark vertex 0 visited
 	visited[FIRST] = true;
-
+	
+	// let current vertex = NULL 
 	Vertex *current = NULL;
-	Vertex *previous = NULL;	
+	
+	// let previous vertex = NULL
+	Vertex *previous = NULL;
+	
+	// while stack not empty 
 	while(!stack.empty()){
-
+		
+		//current = pop from stack
 		current = stack.top();
 		stack.pop();
+
+		//if previous not NULL
 		if(previous != NULL){
+			
+			// dist = dist + distance from previous to current
 			dist = dist + adjMatrix[previous->GetId()][current->GetId()];
 		}
+		
+		//for vertices adjacent to current
 		vector<Vertex*> adjacent = current->GetAdjacencies();
 		for(int v = FIRST; v < adjacent.size(); ++v){
+			
+			// if adjacent vertex not visited
 			if(!visited[adjacent[v]->GetId()]){
-				stack.push(adjacent[v]);
+				
+				//  push adjacent vertex onto stack
+				stack.push(adjacencies[adjacent[v]->GetId()]);
+				
+				// mark adjacent vertex visited
 				visited[adjacent[v]->GetId()] = true;
 			}
 		}
+		//previous = current end while
 		previous = current;
 	}
-	return dist + adjMatrix[current->GetId()][adjacencies[FIRST]->GetId()];
+	
+	//dist = distance from current to vertex 0
+	double back = adjMatrix[current->GetId()][MST[FIRST]->GetId()];
+	return dist + back;
 }

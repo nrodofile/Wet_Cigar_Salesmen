@@ -16,9 +16,7 @@
  *  height.
  *  Initialises random generator
  */
-Random::Random(int low, int high){
-    this->low = low;
-    this->high = high;
+Random::Random(){
     Randomise();
 }
 
@@ -42,7 +40,7 @@ Random::~Random(){
  *  Returns:    RandomInt derived from high and low
  *--------------------------------------------------
  */
-int Random::RandomInt(){
+int Random::RandomInt(int low, int high){
     double random = double(rand() / (double(RAND_MAX) + 1));
     int randomInt = int(random * (high - low));
     return low + randomInt;

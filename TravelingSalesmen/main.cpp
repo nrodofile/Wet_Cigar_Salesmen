@@ -1,495 +1,130 @@
-//
-//  main.cpp
-//  TravelingSalesmen
-//
-//  Created by Nicholas Rodofile on 13/05/13.
-//  Copyright (c) 2013 Nicholas Rodofile. All rights reserved.
-//
+/*
+ * File:  TSP.cpp
+ *
+ * Driver program for Travelling Salesman Problem.
+ *
+ * The Travelling Salesamen Problem works on graphs which adhere to the triangle inequality (the sum of the
+ * lengths of any two sides must be greater than or equal to the length of the remaining side).  For this reason, this
+ * program uses points on the Cartesian plane as the basis for its vertices and the Euclidean (straight line)
+ * distance between them as the edge weight.
+ *
+ * This program can use as input:
+ * 1.  Randomly generated points from the Cartesian plane
+ * 2.  Points from the Cartesian plane read from a file (file name given as a command line argument)
+ *
+ * The points are only required to compute the edge weights between the vertices to satisfy the triangle inequality.
+ *
+ * 1.  Generate or read N points
+ * 2.  Create an instance of a Graph.
+ * 3.  Add a vertex for each point to the graph (store only the id).
+ *      - the vertex will be added to an adjacency list for the graph
+ *      - this adjacency list will store the edges in the Minimum Spanning Tree of the graph
+ *      - each vertex will need to store the vertices it is adjacent to in the Minimum Spanning Tree for use in
+ *        the Depth First Search which details the visit order of cities in the TSP tour.
+ * 4.  Create an undirected edge from each point to every other point using the Euclidean distance between the two
+ *     vertices as the edge weight.
+ *      - This edge will be added to the adjacency matrix in the graph.
+ *      - The edge weight from a vertex to itself will be 0.
+ * 5.  Compute the distance of the optimal TSP tour.
+ *      - This is only feasible using the Brute Force approach if NUM_CITIES < 11 +/- 1.
+ *      - This is only feasible using the Dynamic Programming approach if NUM_CITIES < 21 +/- 2.
+ *      - These upper bounds for NUM_CITIES depend on the memory and speed of the computer being used.
+ * 6.  Compute the distance of the approximate TSP tour
+ *      - Calculate the Minimum Spanning Tree for the input graph.
+ *      - Store the edges in the graph's adjacency list.
+ *      - Perform a Depth First Traversal of the sub-graph defined by the Minimum Spanning Tree
+ *      - Calculate the distance of the tour given by the visit order of the Depth First Search.
+ *      - Remember to include the distance from the final vertex back to the starting vertex in the tour.
+ *
+ *
+ *  NOTES: The given code uses pointers to objects in most places.
+ *         The Point class and Edge class defined in this solution use C++ Templates.
+ *         *** Type parameters may be removed from this code without affecting the mark for the assignment. ***
+ *
+ */
 
 #include <iostream>
-#include "Point.h"
-#include "DisjointSet.h"
-#include "Vertex.h"
-#include "Edge.h"
-#include "Graph.h"
+#include <fstream>
+#include <iomanip>
+#include <vector>
+
+#include "random.h"
+#include "point.h"
+#include "graph.h"
+
 using namespace std;
 
-string testInt(int test, int expected){
-	if ( test == expected){
-		return "pass";
-	}else{
-		cout << expected << " Got " << test << "\t";
-		return "fail";
-	}
+const int MINIMUM_COORDINATE = 0;
+const int MAXIMUM_COORDINATE = 100;
+const int NUM_CITIES = 7;
+const int MAXIMUM_OPTIMAL_CITIES = 23;
+
+int main(int argc, char *argv[]) {
+	
+    int numCities = NUM_CITIES;
+    Random* random = new Random();
+    vector< Point* > cities = vector< Point* >();
+	
+    // allow for testing from file
+    if (argc == 2) {
+		
+        // open the file and check it exists
+        ifstream infile;
+        infile.open(argv[1]);
+        if (infile.fail()) {
+            cerr <<  "Error: Could not find file" << endl;
+            return 1;
+        }
+		
+        // read the number of cities and their co-ordinates
+        int xCoordinate, yCoordinate;
+        infile >> numCities;
+        for (int city = 0; city < numCities; city++) {
+            infile >> xCoordinate >> yCoordinate;
+            cities.push_back(new Point(xCoordinate, yCoordinate));
+            cout << "City " << setw(2) << city << " co-ordinates : " << cities[city]->ToString() << endl;
+        }
+		
+        // close the file
+        infile.close();
+    } else {
+		
+        // randomly create and store numCities points
+        for (int city = 0; city < numCities; city++) {
+            Point* point = new Point(random->RandomInt(MINIMUM_COORDINATE, MAXIMUM_COORDINATE),
+                                               random->RandomInt(MINIMUM_COORDINATE, MAXIMUM_COORDINATE));
+            cities.push_back(point);
+            cout << "City " << setw(2) << city << " co-ordinates : " << cities[city]->ToString() << endl;
+        }
+    }
+    cout << endl;
+	
+    // create the graph and add edges for all cities
+    Graph* graph = new Graph(numCities);
+    for (int i = 0; i < numCities; i++) {
+        Vertex* v = new Vertex(i);
+        graph->AddVertex(v);
+    }
+	
+    for (int i = 0; i < numCities; i++) {
+        for (int j = 0; j < numCities; j++) {
+            Edge* edge = new Edge(graph->GetVertex(i), graph->GetVertex(j), cities[i]->DistanceTo(cities[j]));
+            graph->AddEdge(edge);
+        }
+    }
+	
+    //graph->Display();
+	
+    // calculate the optimal and/or approximate distance of the tour for this graph
+    double optimalTour = 0.0;
+    double approximateTour = 0.0;
+    if (numCities <= MAXIMUM_OPTIMAL_CITIES) {
+        optimalTour = graph->OptimalTSP();
+        cout << "Total Distance of the Optimal Tour is " << optimalTour << endl;
+    }
+	
+    approximateTour = graph->ApproximateTSP();
+    cout << "Total Distance of the Approximate Tour is " << approximateTour << endl;
+	
+    return 0;
 }
-
-string testBool(bool test, bool expected){
-	if ( test == expected){
-		return "pass";
-	}else{
-		cout << test << "\t";
-		return "fail";
-	}
-}
-
-string testVertex(Vertex test, int expected[]){
-	vector<Vertex*> list = test.GetAdjacencies();
-	for(int i = 0; i < list.size(); ++i){
-		int id = list[i]->GetId();
-		int exp = expected[i];
-		if(testInt(id, exp) != "pass"){
-			return "fail";
-		}
-	}
-	return "pass";
-}
-
-void testPoint(){
-	
-	cout << endl << "Point Test" << endl;
-	Point *point1 = new Point(2,1);
-	Point *point2 = new Point(2,3);
-	Point *point3 = new Point(3,1);
-	Point *point4 = new Point(2,4);
-	Point *point5 = new Point(5,1);
-	Point *point6 = new Point(2,7);
-	Point *point7 = new Point(16,40);
-	Point *point8 = new Point(22,4);
-	
-	cout << testInt(point1->DistanceTo(point2), 2) << endl;
-	cout << testInt(point1->DistanceTo(point3), 1) << endl;
-	cout << testInt(point1->DistanceTo(point4), 3) << endl;
-	cout << testInt(point1->DistanceTo(point5), 3) << endl;
-	cout << testInt(point1->DistanceTo(point6), 6) << endl;
-	cout << testInt(point2->DistanceTo(point3), 2) << endl;
-	cout << testInt(point2->DistanceTo(point4), 1) << endl;
-	cout << testInt(point2->DistanceTo(point5), 3) << endl;
-	cout << testInt(point2->DistanceTo(point6), 4) << endl;
-	cout << testInt(point7->DistanceTo(point8), 36) << endl;
-	
-	delete point1;
-	delete point2;
-	delete point3;
-	delete point4;
-	delete point5;
-	delete point6;
-	delete point7;
-	delete point8;
-}
-
-void testDisjoint(){
-	cout << endl << "Disjoint Test" << endl;
-	DisjointSet *set1 = new DisjointSet(10);
-	cout << testBool(set1->SameComponent(3, 4), false) << endl;
-	set1->Union(3, 4);
-	cout << testBool(set1->SameComponent(3, 4), true) << endl;
-	cout << testBool(set1->SameComponent(4, 9), false) << endl;
-	set1->Union(4, 9);
-	cout << testBool(set1->SameComponent(4, 9), true) << endl;
-	cout << testBool(set1->SameComponent(8, 0), false) << endl;
-	set1->Union(8, 0);
-	cout << testBool(set1->SameComponent(8, 0), true) << endl;
-	cout << testBool(set1->SameComponent(2, 3), false) << endl;
-	set1->Union(2, 3);
-	cout << testBool(set1->SameComponent(2, 3), true) << endl;
-	cout << testBool(set1->SameComponent(5, 6), false) << endl;
-	set1->Union(5, 6);
-	cout << testBool(set1->SameComponent(5, 6), true) << endl;
-	cout << testBool(set1->SameComponent(5, 9), false) << endl;
-	set1->Union(5, 9);
-	cout << testBool(set1->SameComponent(5, 9), true) << endl;
-	cout << testBool(set1->SameComponent(7, 3), false) << endl;
-	set1->Union(7, 3);
-	cout << testBool(set1->SameComponent(7, 3), true) << endl;
-	cout << testBool(set1->SameComponent(4, 8), false) << endl;
-	set1->Union(4, 8);
-	cout << testBool(set1->SameComponent(4, 8), true) << endl;
-	cout << testBool(set1->SameComponent(6, 1), false) << endl;
-	set1->Union(6, 1);
-	cout << testBool(set1->SameComponent(6, 1), true) << endl;
-
-	
-	delete set1;
-}
-
-void testVerticies(){
-	cout << endl << "Verticies Test" << endl;
-	Vertex *v1 = new Vertex(1);
-	Vertex *v2 = new Vertex(2);
-	Vertex *v3 = new Vertex(3);
-	Vertex *v4 = new Vertex(4);
-	Vertex *v5 = new Vertex(5);
-	Vertex *v6 = new Vertex(6);
-	Vertex *v7 = new Vertex(7);
-	Vertex *v8 = new Vertex(8);
-	Vertex *v9 = new Vertex(9);
-	Vertex *v10 = new Vertex(10);
-	
-	cout << testInt(v1->GetId(), 1) << endl;
-	cout << testInt(v2->GetId(), 2) << endl;
-	cout << testInt(v3->GetId(), 3) << endl;
-	cout << testInt(v4->GetId(), 4) << endl;
-	cout << testInt(v5->GetId(), 5) << endl;
-	cout << testInt(v6->GetId(), 6) << endl;
-	cout << testInt(v7->GetId(), 7) << endl;
-	cout << testInt(v8->GetId(), 8) << endl;
-	cout << testInt(v9->GetId(), 9) << endl;
-	cout << testInt(v10->GetId(), 10) << endl;
-	
-	cout << endl << "Verticies Adjacentcies Test" << endl;
-	v1->AddAdjacency(v2);
-	v1->AddAdjacency(v3);
-	v1->AddAdjacency(v4);
-	v1->AddAdjacency(v5);
-	int test1[] = {2, 3, 4, 5};
-	cout << testVertex(*v1, test1) << endl;
-
-	v2->AddAdjacency(v5);
-	v2->AddAdjacency(v3);
-	v2->AddAdjacency(v8);
-	v2->AddAdjacency(v1);
-	int test2[] = {5, 3, 8, 1};
-	cout << testVertex(*v2, test2) << endl;
-	
-	v3->AddAdjacency(v8);
-	v3->AddAdjacency(v1);
-	v3->AddAdjacency(v10);
-	v3->AddAdjacency(v6);
-	int test3[] = {8, 1, 10, 6};
-	cout << testVertex(*v3, test3) << endl;
-	
-	delete v1;
-	delete v2;
-	delete v3;
-	delete v4;
-	delete v5;
-	delete v6;
-	delete v7;
-	delete v8;
-	delete v9;
-	delete v10;
-}
-
-void testEdge(){
-	cout << endl << "Edge Test" << endl;
-	Vertex *v1 = new Vertex(1);
-	Vertex *v2 = new Vertex(2);
-	Vertex *v3 = new Vertex(3);
-	Vertex *v4 = new Vertex(4);
-	Vertex *v5 = new Vertex(5);
-	
-	Edge *e1 = new Edge(v1, v2, 3);
-	Edge *e2 = new Edge(v2, v3, 6);
-	Edge *e3 = new Edge(v3, v4, 8);
-	Edge *e4 = new Edge(v4, v5, 7);
-	Edge *e5 = new Edge(v5, v1, 5);
-	
-	cout << testInt((e1->GetSource())->GetId(), 1) << endl;
-	cout << testInt((e1->GetDestination())->GetId(), 2) << endl;
-	cout << testInt(e1->GetWeight(), 3) << endl;
-	
-	cout << testInt((e2->GetSource())->GetId(), 2) << endl;
-	cout << testInt((e2->GetDestination())->GetId(), 3) << endl;
-	cout << testInt(e2->GetWeight(), 6) << endl;
-	
-	cout << testInt((e3->GetSource())->GetId(), 3) << endl;
-	cout << testInt((e3->GetDestination())->GetId(), 4) << endl;
-	cout << testInt(e3->GetWeight(), 8) << endl;
-	
-	cout << testInt((e4->GetSource())->GetId(), 4) << endl;
-	cout << testInt((e4->GetDestination())->GetId(), 5) << endl;
-	cout << testInt(e4->GetWeight(), 7) << endl;
-	
-	cout << testInt((e5->GetSource())->GetId(), 5) << endl;
-	cout << testInt((e5->GetDestination())->GetId(), 1) << endl;
-	cout << testInt(e5->GetWeight(), 5) << endl;
-
-	
-	delete e1;
-	delete e2;
-	delete e3;
-	delete e4;
-	delete e5;
-	delete v1;
-	delete v2;
-	delete v3;
-	delete v4;
-	delete v5;
-
-}
-
-void testGraph(){
-	cout << endl << "Edge Graph" << endl;
-	Vertex *A = new Vertex(0);
-	Vertex *B = new Vertex(1);
-	Vertex *C = new Vertex(2);
-	Vertex *D = new Vertex(3);
-	Vertex *E = new Vertex(4);
-	Vertex *F = new Vertex(5);
-	
-	A->AddAdjacency(B);
-	A->AddAdjacency(C);
-	A->AddAdjacency(E);
-
-	Edge *e1 = new Edge(A, B, 5);
-	Edge *e2 = new Edge(A, C, 4);
-	Edge *e3 = new Edge(A, E, 2);
-	
-	B->AddAdjacency(A);
-	B->AddAdjacency(D);
-	B->AddAdjacency(F);
-	
-	Edge *e4 = new Edge(B, A, 5);
-	Edge *e5 = new Edge(B, D, 2);
-	Edge *e6 = new Edge(B, F, 3);
-	
-	C->AddAdjacency(A);
-	C->AddAdjacency(E);
-	
-	Edge *e7 = new Edge(C, A, 4);
-	Edge *e8 = new Edge(C, E, 3);
-	
-	D->AddAdjacency(A);
-	D->AddAdjacency(B);
-	D->AddAdjacency(E);
-	D->AddAdjacency(F);
-	
-	Edge *e9 = new Edge(D, A, 6);
-	Edge *e10 = new Edge(D, B, 2);
-	Edge *e11 = new Edge(D, E, 1);
-	Edge *e12 = new Edge(D, F, 2);
-	
-	E->AddAdjacency(A);
-	E->AddAdjacency(C);
-	E->AddAdjacency(F);
-	
-	Edge *e13 = new Edge(E, A, 2);
-	Edge *e14 = new Edge(E, C, 3);
-	Edge *e15 = new Edge(E, F, 4);
-	
-	F->AddAdjacency(B);
-	F->AddAdjacency(D);
-	F->AddAdjacency(E);
-	
-	Edge *e16 = new Edge(F, B, 3);
-	Edge *e17 = new Edge(F, D, 2);
-	Edge *e18= new Edge(F, E, 4);
-	
-	Graph *graph1 = new Graph(6);
-	graph1->AddVertex(A);
-	graph1->AddVertex(B);
-	graph1->AddVertex(C);
-	graph1->AddVertex(D);
-	graph1->AddVertex(E);
-	graph1->AddVertex(F);
-	
-	int test0[] = {1, 2, 4};
-	cout << testVertex(*graph1->GetVertex(0), test0) << endl;
-	
-	int test1[] = {0, 3, 5};
-	cout << testVertex(*graph1->GetVertex(1), test1) << endl;
-	
-	int test2[] = {0, 4};
-	cout << testVertex(*graph1->GetVertex(2), test2) << endl;
-	
-	int test3[] = {0, 1, 4, 5};
-	cout << testVertex(*graph1->GetVertex(3), test3) << endl;
-	
-	int test4[] = {0, 2, 5};
-	cout << testVertex(*graph1->GetVertex(4), test4) << endl;
-	
-	int test5[] = {1, 3, 4};
-	cout << testVertex(*graph1->GetVertex(5), test5) << endl;
-	
-	graph1->AddEdge(e1);
-	graph1->AddEdge(e2);
-
-
-
-	delete e1;
-	delete e2;
-	delete e3;
-	delete e4;
-	delete e5;
-	delete e6;
-	delete e7;
-	delete e8;
-	delete e9;
-	delete e10;
-	delete e11;
-	delete e12;
-	delete e13;
-	delete e14;
-	delete e15;
-	delete e16;
-	delete e17;
-	delete e18;
-	delete A;
-	delete B;
-	delete C;
-	delete D;
-	delete E;
-	delete F;
-	delete graph1;
-}
-
-void testGraph2(){
-	
-	cout << endl << "Edge Graph2" << endl;
-	vector<Vertex*> v;
-	vector<Edge*> ed;
-	Graph *g1 = new Graph(4);
-	
-	Vertex *A = new Vertex(0);
-	Vertex *B = new Vertex(1);
-	Vertex *C = new Vertex(2);
-	Vertex *D = new Vertex(3);
-	
-	A->AddAdjacency(B);
-	A->AddAdjacency(C);
-	A->AddAdjacency(D);
-	
-	B->AddAdjacency(A);
-	B->AddAdjacency(C);
-	B->AddAdjacency(D);
-	
-	C->AddAdjacency(A);
-	C->AddAdjacency(B);
-	C->AddAdjacency(D);
-	
-	D->AddAdjacency(A);
-	D->AddAdjacency(B);
-	D->AddAdjacency(C);
-	
-		v.push_back(A);
-		v.push_back(B);
-		v.push_back(C);
-		v.push_back(D);
-	int d[] = {7,2,6,7,6,4,2,6,3,6,4,3};
-	int dist = 0;
-	for(int i = 0; i < v.size(); i++){
-		vector<Vertex*> v2 = v[i]->GetAdjacencies();
-		g1->AddVertex(v[i]);
-		for(int j = 0; j < v2.size(); j++){
-			Edge *e = new Edge(v[i], v2[j], d[dist++]);
-			g1->AddEdge(e);
-			ed.push_back(e);
-			
-		}
-	}
-	
-
-	cout << g1->ApproximateTSP() << endl;
-	cout << g1->OptimalTSP() << endl;
-	
-	delete g1;
-	for(int i = 0; i< ed.size(); i++){
-		delete ed[i];
-	}
-	delete A;
-	delete B;
-	delete C;
-	delete D;
-
-
-
-
-}
-
-
-void testGraph3(){
-	
-	cout << endl << "Edge Graph3" << endl;
-	vector<Vertex*> v;
-	vector<Edge*> ed;
-	Graph *g1 = new Graph(5);
-	
-	Vertex *A = new Vertex(0);
-	Vertex *B = new Vertex(1);
-	Vertex *C = new Vertex(2);
-	Vertex *D = new Vertex(3);
-	Vertex *E = new Vertex(4);
-	
-	A->AddAdjacency(B);
-	A->AddAdjacency(C);
-	A->AddAdjacency(D);
-	A->AddAdjacency(E);
-	
-	B->AddAdjacency(A);
-	B->AddAdjacency(C);
-	B->AddAdjacency(D);
-	B->AddAdjacency(E);
-	
-	C->AddAdjacency(A);
-	C->AddAdjacency(B);
-	C->AddAdjacency(D);
-	C->AddAdjacency(E);
-	
-	
-	D->AddAdjacency(A);
-	D->AddAdjacency(B);
-	D->AddAdjacency(C);
-	D->AddAdjacency(E);
-	
-	E->AddAdjacency(A);
-	E->AddAdjacency(B);
-	E->AddAdjacency(C);
-	E->AddAdjacency(D);
-	
-	
-	v.push_back(A);
-	v.push_back(B);
-	v.push_back(C);
-	v.push_back(D);
-	v.push_back(E);
-	
-	int d[] = {11,3,10,14,11,12,4,3,3,12,5,2,10,4,5,7 };
-	int dist = 0;
-	for(int i = 0; i < v.size(); i++){
-		vector<Vertex*> v2 = v[i]->GetAdjacencies();
-		g1->AddVertex(v[i]);
-		for(int j = 0; j < v2.size(); j++){
-			Edge *e = new Edge(v[i], v2[j], d[dist++]);
-			g1->AddEdge(e);
-			ed.push_back(e);
-			
-		}
-	}
-	
-	cout << g1->ApproximateTSP() << endl;
-	cout << g1->OptimalTSP() << endl;
-	
-	delete g1;
-	for(int i = 0; i< ed.size(); i++){
-		delete ed[i];
-	}
-	delete A;
-	delete B;
-	delete C;
-	delete D;
-	delete E;
-	
-	
-	
-}
-
-
-
-int main(int argc, const char * argv[])
-{
-
-	// insert code here...
-	cout << "Hello, World!\n";
-	
-	testPoint();
-	testDisjoint();
-	testVerticies();
-	testEdge();
-	testGraph();
-	testGraph2();
-	testGraph3();
-	
-	    return 0;
-}
-
-
