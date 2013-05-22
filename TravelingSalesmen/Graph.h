@@ -20,22 +20,22 @@
 #include "DisjointSet.h"
 #include "EdgeComparer.h"
 
-
-
-#define INFINATY 999999999
+#define INFINATY 100000000
+#define OPTIMAL_MAX 22
+#define TSPDP_MAX 11
+#define FIRST 0
+#define START 0
 
 class Graph {
 	
 	vector<Vertex*> adjacencies;
 	vector <Edge*> edges;
-	double **vert;
+	double **adjMatrix;
 	vector<Vertex*> MST;	//Minimum Spanning Tree
-	vector<bitset<23>> MT; //memoisation table
+	vector<bitset<TSPDP_MAX>> MT; //memoisation table
 	int verticies;
 
 public:
-	
-	double GetWeight(Vertex*, Vertex*);
 	
 /*  Function: Graph - Constructor
  *--------------------------------------------------
@@ -108,7 +108,7 @@ private:
  *
  *  Returns:
  */
-	double TSPBruteForce(int, vector<int>);
+	double TSPBruteForce(int, bool*);
 	
 /*  Function: TSPDp
  *--------------------------------------------------
@@ -141,10 +141,6 @@ private:
  */
 	double DepthFirstSearch();
 	
-//	int GetWeight(Vertex*, Vertex*);
-	void SortEdges();
-	int GetIndex(Vertex* ,vector<Vertex*>);
-
 };
 
 #endif /* defined(__TravelingSalesmen__Graph__) */

@@ -378,15 +378,6 @@ void testGraph2(){
 		}
 	}
 	
-	cout << testInt(g1->GetWeight(A, B), 7) << endl;
-	cout << testInt(g1->GetWeight(D, B), 4) << endl;
-	cout << testInt(g1->GetWeight(C, B), 6) << endl;
-	cout << testInt(g1->GetWeight(A, C), 2) << endl;
-	
-	cout << testInt(g1->GetWeight(B, A), 7) << endl;
-	cout << testInt(g1->GetWeight(B, C), 6) << endl;
-	cout << testInt(g1->GetWeight(B, D), 4) << endl;
-	cout << testInt(g1->GetWeight(C, A), 2) << endl;
 
 	cout << g1->ApproximateTSP() << endl;
 	cout << g1->OptimalTSP() << endl;
