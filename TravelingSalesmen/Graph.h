@@ -23,7 +23,7 @@
 
 #define INFINATY 2147483647
 #define OPTIMAL_MAX 22
-#define TSPDP_MAX 11
+#define TSPDP_MAX 12
 #define FIRST 0
 #define START 0
 
@@ -34,7 +34,7 @@ class Graph {
 	double **adjMatrix;
 	vector<Vertex*> MST;	//Minimum Spanning Tree
 	std::priority_queue<Edge*, vector<Edge*>, EdgeComparer> edges;
-	vector<bitset<TSPDP_MAX>> MT; //memoisation table
+	double **MT; //memoisation table
 	int verticies;
 
 public:

@@ -104,10 +104,14 @@ double Graph::OptimalTSP(){
 		if (verticies > TSPDP_MAX){
 			
 			//	Create memoisation table [N][(1 << N)]
+			MT = new double *[TSPDP_MAX];
 			//	Set all values in table to UNSET
 			for(int b = FIRST; b < verticies; b++){
-				bitset<TSPDP_MAX> set;
-				MT.push_back(set);
+				
+				MT[b] = new double[TSPDP_MAX];
+				for (int m = FIRST; m < verticies; m++){
+					MT[b][(1 << TSPDP_MAX)] = 0;
+				}
 			}			
 			result = TSPDP(FIRST, 1);
 			

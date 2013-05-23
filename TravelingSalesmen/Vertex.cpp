@@ -76,5 +76,8 @@ void Vertex::ClearAdjacentcies(){
  *			 For testing purposes.
  */
 string Vertex::ToString(){
-	return to_string(identifier);
+	
+	stringstream ss;
+	ss << identifier;
+	return ss.str();
 }

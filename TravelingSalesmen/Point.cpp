@@ -70,5 +70,8 @@ double Point::DistanceTo(Point *point){
  *  Returns: string representation of this Point
  */
 string Point::ToString(){
-	return "(" + to_string(x) + ", " + to_string(y) + ")"; 
+	
+	stringstream ss;
+	ss << "(" + to_string(x) + ", " + to_string(y) + ")";
+	return ss.str();
 }

@@ -10,7 +10,7 @@
 #define __TravelingSalesmen__Vertex__
 
 #include <iostream>
-
+#include <sstream>
 #include <vector>
 using namespace std;
 class Vertex {

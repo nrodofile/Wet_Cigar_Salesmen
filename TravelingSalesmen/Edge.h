@@ -10,6 +10,7 @@
 #define __TravelingSalesmen__Edge__
 
 #include <iostream>
+#include <sstream>
 #include "Vertex.h"
 
 class Edge {

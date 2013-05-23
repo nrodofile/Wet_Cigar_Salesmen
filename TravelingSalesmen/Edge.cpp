@@ -69,5 +69,7 @@ double Edge::GetWeight(){
  *			 For testing purposes.
  */
 string Edge::ToString(){
-	return to_string(weight);
+	stringstream ss;
+	ss << weight;
+	return ss.str();
 }

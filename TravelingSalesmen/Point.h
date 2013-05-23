@@ -11,12 +11,18 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <math.h>
 
 using namespace std;
 
 class Point
 {
+	
+//co-ordinates on the plane
+int x;
+int y;
+	
 public:
 /*  Function: Point - Constructor
  *--------------------------------------------------
@@ -66,10 +72,7 @@ public:
  *  Returns: string representation of this Point
  */
 	string ToString();
-private:
-	//co-ordinates on the plane
-	int x;
-	int y;
+
 };
 
 
