@@ -14,6 +14,7 @@
 #include <stack>
 #include <vector>
 #include <algorithm>
+#include <queue>
 #include <bitset>
 #include "Vertex.h"
 #include "Edge.h"
@@ -29,9 +30,10 @@
 class Graph {
 	
 	vector<Vertex*> adjacencies;
-	vector <Edge*> edges;
+	//vector <Edge*> edges;
 	double **adjMatrix;
 	vector<Vertex*> MST;	//Minimum Spanning Tree
+	std::priority_queue<Edge*, vector<Edge*>, EdgeComparer> edges;
 	vector<bitset<TSPDP_MAX>> MT; //memoisation table
 	int verticies;
 

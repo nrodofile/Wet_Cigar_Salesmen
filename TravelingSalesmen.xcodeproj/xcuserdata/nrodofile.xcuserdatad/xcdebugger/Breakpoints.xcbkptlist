@@ -8,12 +8,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TravelingSalesmen/Graph.cpp"
-         timestampString = "390934155.667529"
+         timestampString = "390981284.123426"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "347"
-         endingLineNumber = "347"
-         landmarkName = "Graph::DepthFirstSearch()"
+         startingLineNumber = "265"
+         endingLineNumber = "265"
+         landmarkName = "Graph::MinimumSpanningTree()"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -21,12 +21,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TravelingSalesmen/Graph.cpp"
-         timestampString = "390934155.667529"
+         timestampString = "390981284.123426"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "337"
-         endingLineNumber = "337"
-         landmarkName = "Graph::DepthFirstSearch()"
+         startingLineNumber = "277"
+         endingLineNumber = "277"
+         landmarkName = "Graph::MinimumSpanningTree()"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -34,39 +34,26 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TravelingSalesmen/Graph.cpp"
-         timestampString = "390934155.667529"
+         timestampString = "390981284.123426"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "353"
-         endingLineNumber = "353"
+         startingLineNumber = "311"
+         endingLineNumber = "311"
          landmarkName = "Graph::DepthFirstSearch()"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TravelingSalesmen/Graph.cpp"
-         timestampString = "390916880.901863"
+         timestampString = "390981284.123426"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "79"
-         endingLineNumber = "79"
-         landmarkName = "Graph::AddEdge(Edge *edge)"
+         startingLineNumber = "335"
+         endingLineNumber = "335"
+         landmarkName = "Graph::DepthFirstSearch()"
          landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "TravelingSalesmen/main.cpp"
-         timestampString = "390931381.956952"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "111"
-         endingLineNumber = "111"
-         landmarkName = "main(int argc, char *argv[])"
-         landmarkType = "7">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

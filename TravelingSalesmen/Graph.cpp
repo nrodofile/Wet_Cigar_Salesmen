@@ -78,7 +78,7 @@ void Graph::AddEdge(Edge *edge){
 		
 	adjMatrix[s][d] = edge->GetWeight();
 	
-	edges.push_back(edge);
+	edges.push(edge);
 	
 }
 
@@ -251,7 +251,7 @@ double Graph::TSPDP(int current, int bitmask){
  */
 void Graph::MinimumSpanningTree(){
 	int numEdges = START;
-	int e = FIRST;
+	double w = 0; //test
 	
 	//	1.Place each vertex in its own cluster or set
 	DisjointSet *set = new DisjointSet(verticies);
@@ -261,12 +261,17 @@ void Graph::MinimumSpanningTree(){
 		MST.push_back(v);
 	}
 	
-	sort(edges.begin(), edges.end(), EdgeComparer());
+
 	while(numEdges != verticies-1){
 //	2.Take the edge e with the smallest weight
-
-		int s = edges[e]->GetSource()->GetId(); //Source
-		int d = edges[e]->GetDestination()->GetId(); //Destination
+//
+//		int s = edges[e]->GetSource()->GetId(); //Source
+//		int d = edges[e]->GetDestination()->GetId(); //Destination
+		Edge *e = edges.top();
+		edges.pop();
+		
+		int s = e->GetSource()->GetId(); //Source
+		int d = e->GetDestination()->GetId(); //Destination
 		
 //		a) If e connects two vertices in different clusters, 
 		if (!set->SameComponent(s,d)){
@@ -277,18 +282,18 @@ void Graph::MinimumSpanningTree(){
 			
 			set->Union(s, d);
 			numEdges++;
-			
+			w += e->GetWeight();
 			adjacencies[s]->AddAdjacency(adjacencies[d]);
 			adjacencies[d]->AddAdjacency(adjacencies[s]);
 		}
 		
 //		b) If e connects two vertices which are already
 //		in the same cluster, ignore it
-		e  ++;
+		e ++;
 		
 //	3.Continue until N – 1 edges are selected
-	}	
-	delete set;
+	}
+	cout << w << endl;
 }
 
 
@@ -314,6 +319,8 @@ double Graph::DepthFirstSearch(){
 	
 	// push vertex 0 onto stack
 	stack.push(MST[FIRST]);
+	//stack.push(MST.top());
+	
 	
 	// mark vertex 0 visited
 	visited[FIRST] = true;
