@@ -56,7 +56,7 @@ using namespace std;
 
 const int MINIMUM_COORDINATE = 0;
 const int MAXIMUM_COORDINATE = 100;
-const int NUM_CITIES = 20;
+const int NUM_CITIES = 23;
 const int MAXIMUM_OPTIMAL_CITIES = 23;
 
 int main(int argc, char *argv[]) {

@@ -15,60 +15,59 @@
 
 class Edge {
 
-private:
-	double weight;
-	Vertex *source;
-	Vertex *destination;
+double weight;
+Vertex *source;
+Vertex *destination;
 
 public:
-/*  Function: Edge - Constructor
- *--------------------------------------------------
- *	Usage: Edge(source, destination, weight)
- *--------------------------------------------------
- *  [Constructor which sets the source vertex, the
- *	destination vertex and the weight for this
- *	Edge
- */
+	/*  Function: Edge - Constructor
+	 *--------------------------------------------------
+	 *	Usage: Edge(source, destination, weight)
+	 *--------------------------------------------------
+	 *  [Constructor which sets the source vertex, the
+	 *	destination vertex and the weight for this
+	 *	Edge
+	 */
 	Edge(Vertex *source, Vertex* destination, double weight);
 	
-/*  Function: Edge - Distructor
- *--------------------------------------------------
- *	Usage: ~Edge()
- *--------------------------------------------------
- */
+	/*  Function: Edge - Distructor
+	 *--------------------------------------------------
+	 *	Usage: ~Edge()
+	 *--------------------------------------------------
+	 */
 	~Edge();
 	
-/*  Function: GetSource
- *--------------------------------------------------
- *	Usage: edge->GetSource()
- *--------------------------------------------------
- *  Returns: pointer to the source vertex
- */
+	/*  Function: GetSource
+	 *--------------------------------------------------
+	 *	Usage: edge->GetSource()
+	 *--------------------------------------------------
+	 *  Returns: pointer to the source vertex
+	 */
 	Vertex* GetSource();
 	
-/*  Function: GetDestination
- *--------------------------------------------------
- *	Usage: edge->GetDestination()
- *--------------------------------------------------
- *  Returns: pointer to the Destination vertex
- */
+	/*  Function: GetDestination
+	 *--------------------------------------------------
+	 *	Usage: edge->GetDestination()
+	 *--------------------------------------------------
+	 *  Returns: pointer to the Destination vertex
+	 */
 	Vertex* GetDestination();
 	
-/*  Function: GetWeight
- *--------------------------------------------------
- *	Usage: edge->GetWeight()
- *--------------------------------------------------
- *  Returns: double of the weight of the edge
- */
+	/*  Function: GetWeight
+	 *--------------------------------------------------
+	 *	Usage: edge->GetWeight()
+	 *--------------------------------------------------
+	 *  Returns: double of the weight of the edge
+	 */
 	double GetWeight();
 	
-/*  Function: ToString
- *--------------------------------------------------
- *	Usage: edge->ToString()
- *--------------------------------------------------
- *  Returns: string representation of this Edge.
- *			 For testing purposes.
- */
+	/*  Function: ToString
+	 *--------------------------------------------------
+	 *	Usage: edge->ToString()
+	 *--------------------------------------------------
+	 *  Returns: string representation of this Edge.
+	 *			 For testing purposes.
+	 */
 	string ToString();
 
 };

@@ -59,8 +59,36 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
+            argument = "/Users/nrodofile/Wet_Cigar_Salesmen/Test/zero.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/Users/nrodofile/Wet_Cigar_Salesmen/Test/twopoints.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/Users/nrodofile/Wet_Cigar_Salesmen/Test/line.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/Users/nrodofile/Wet_Cigar_Salesmen/Test/square.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/Users/nrodofile/Wet_Cigar_Salesmen/Test/squareinsquare.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/Users/nrodofile/Wet_Cigar_Salesmen/Test/square3.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "/Users/nrodofile/Wet_Cigar_Salesmen/Test/x.txt"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/Users/nrodofile/Wet_Cigar_Salesmen/Test/hexagon.txt"
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>

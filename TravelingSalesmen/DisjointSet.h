@@ -14,56 +14,51 @@
 
 class DisjointSet {
 	
-private:
-	//int size;
-	int* id;
-	int* size;
-	int N;
-	//std::vector<int> id;
-	//std::vector<int> size;
+int* id;
+int* size;
 
 public:
-/*  Function: DisjointSet - Constructor
- *--------------------------------------------------
- *	Usage: DisjointSet(size);
- *--------------------------------------------------
- *  Constructor which sets the size of this
- *	DisjointSet
- */
+	/*  Function: DisjointSet - Constructor
+	 *--------------------------------------------------
+	 *	Usage: DisjointSet(size);
+	 *--------------------------------------------------
+	 *  Constructor which sets the size of this
+	 *	DisjointSet
+	 */
 	DisjointSet(int);
 	
-/*  Function: DisjointSet - Destructor
- *--------------------------------------------------
- *	Usage: ~Disjoint();
- *--------------------------------------------------
- */
+	/*  Function: DisjointSet - Destructor
+	 *--------------------------------------------------
+	 *	Usage: ~Disjoint();
+	 *--------------------------------------------------
+	 */
 	~DisjointSet();
 	
-/*  Function: Find
- *--------------------------------------------------
- *	Usage:
- *--------------------------------------------------
- *  Returns:	The index of the parent set of the
- *				element in the parameter
- */
+	/*  Function: Find
+	 *--------------------------------------------------
+	 *	Usage: Find(i)
+	 *--------------------------------------------------
+	 *  Returns:	The index of the parent set of the
+	 *				element in the parameter
+	 */
 	int Find(int);
 	
-/*  Function: Union
- *--------------------------------------------------
- *	Usage:
- *--------------------------------------------------
- *  Returns:	Creates the union of two disjoint sets whose
- *				indexes are passed as parameters
- */
+	/*  Function: Union
+	 *--------------------------------------------------
+	 *	Usage: set-> Union(p, q)
+	 *--------------------------------------------------
+	 *  Returns:	Creates the union of two disjoint sets whose
+	 *				indexes are passed as parameters
+	 */
 	void Union(int, int);
 	
-/*  Function: SameComponent
- *--------------------------------------------------
- *	Usage:
- *--------------------------------------------------
- *  Returns:	true if the two indexes passed as
- *				parameters are in the same set
- */
+	/*  Function: SameComponent
+	 *--------------------------------------------------
+	 *	Usage: set-> SameComponent(p, q)
+	 *--------------------------------------------------
+	 *  Returns:	true if the two indexes passed as
+	 *				parameters are in the same set
+	 */
 	bool SameComponent(int,int);
   
 };

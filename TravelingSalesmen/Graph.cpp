@@ -37,10 +37,10 @@ Graph::~Graph(){
 	
 	for (int i = FIRST; i < verticies; i++) {
 		delete[] adjMatrix[i];
-		delete[] MT[i];
+		delete[] table[i];
 	}
 	delete[] adjMatrix;
-	delete[] MT;
+	delete[] table;
 }
 
 /*  Function: AddVertex
@@ -51,8 +51,7 @@ Graph::~Graph(){
  *	for this Graph.
  */
 void Graph::AddVertex(Vertex *vertex){
-	vector<Edge*> e;
-	
+	vector<Edge*> e;	
 	adjacencies.push_back(vertex);
 }
 
@@ -78,8 +77,7 @@ void Graph::AddEdge(Edge *edge){
 	int s = (edge->GetSource())->GetId();
 	int d = (edge->GetDestination())->GetId();
 		
-	adjMatrix[s][d] = edge->GetWeight();
-	
+	adjMatrix[s][d] = edge->GetWeight();	
 	edges.push(edge);
 	
 }
@@ -99,21 +97,23 @@ double Graph::OptimalTSP(){
 	double result = INFINATY;
 	
 	if (verticies > OPTIMAL_MAX){
-		cerr << "Cannot Get Optimal tour, there are more than 22 cities" << endl;
+		cerr << "Cannot Get Optimal tour, there are more than "
+				<< OPTIMAL_MAX << " cities" << endl;
+		
 		result = 0;
 	}else{
 		
 		if (verticies > TSPDP_MAX){
 			
 			//	Create memoisation table [N][(1 << N)]
-			MT = new double *[verticies];
+			table = new double *[verticies];
+			
 			//	Set all values in table to UNSET
 			for(int b = FIRST; b < verticies; b++){
-				
-				MT[b] = new double[1 << verticies];
+				table[b] = new double[1 << verticies];
 				
 				for (int m = FIRST; m < (1 << verticies); m++){
-					MT[b][m] = UNSET;
+					table[b][m] = UNSET;
 				}
 			}			
 			result = TSPDP(FIRST, 1);
@@ -136,27 +136,29 @@ double Graph::OptimalTSP(){
  *	Usage: lenght = ApproximateTSP();
  *--------------------------------------------------
  *  Returns:	length of the approximate TSP tour
- *				calculated using the given algorithm
  */
 double Graph::ApproximateTSP(){
 	MinimumSpanningTree();
-	double TSP = DepthFirstSearch();
-	return TSP;
+	
+	return DepthFirstSearch();
 }
 
 
 /*  Function: TSPBruteForce
  *--------------------------------------------------
- *	Usage:
+ *	Usage: TSPBruteForce(current, * visited)
  *--------------------------------------------------
- *  [DESCRIPTION]
+ *  computes every combination of tour through all 
+ *	vertices finding the minimum. It relies on recursion 
+ *	and backtracking to find the solution.
  *
- *  Returns:
+ *  Returns: double of the minimum distance 
  */
 double Graph::TSPBruteForce(int current, bool* visited){
 	double minDistance; 
 	bool visitedAll = true;
 
+	// check if all verticies are visited
 	for (int v = FIRST; v < verticies; v++){
 		if(!visited[v]){
 			visitedAll = false;
@@ -168,7 +170,7 @@ double Graph::TSPBruteForce(int current, bool* visited){
 		return  adjMatrix[current][adjacencies[FIRST]->GetId()];
 	}
 	
-//	make a copy of visited
+	//	make a copy of visited
 	bool* visitedCp = new bool[verticies];
 	
 	for (int b = FIRST; b < verticies; b++){
@@ -176,45 +178,40 @@ double Graph::TSPBruteForce(int current, bool* visited){
 	}
 	minDistance = INFINATY;
 	
-//	for adjacent 'a' from 0 to numVertices-1
 	for (int a = FIRST; a <= verticies-1; ++a){
 		
-//		if current != adjacent AND adjacent not visited
 		if (current != adjacencies[a]->GetId() && !visited[a]){
 			visitedCp[a] = true;
 			
-//			dist = distance from current to adjacent +
-//			TSPBruteForce(adjacent, copy of visited)
 			double dist =
 				adjMatrix[current][adjacencies[a]->GetId()] +
 						TSPBruteForce(adjacencies[a]->GetId(),visitedCp);
 
-//			minDistance = minimum(minDistance, dist)
 			if(minDistance > dist){
 				minDistance = dist;
 			}
 			
 			visitedCp[a] = false;
 		}
-	}
-	
+	}	
 	return minDistance;
-
 }
 
-/*  Function: TSPDp
+/*  Function: TSPDP
  *--------------------------------------------------
- *	Usage:
+ *	Usage: TSPDP(current, bitmask)
  *--------------------------------------------------
- *  [DESCRIPTION]
+ *  uses a similar approach to the Brute Force algorithm 
+ *	but uses a problem solving approach know as Dynamic Programming
+ *	to store optimal solutions to sub-problems of the larger 
+ *	problem being solved
  *
- *  Returns:
+ *  Returns: double of minimum optimal distance of the tour
  */
 double Graph::TSPDP(int current, int bitmask){
 	
-//	if table[current][bitmask] is not UNSET
-	if (MT[current][bitmask] != UNSET){
-		return MT[current][bitmask];
+	if (table[current][bitmask] != UNSET){
+		return table[current][bitmask];
 	}
 
 	if(bitmask == (1 << verticies)-1){
@@ -224,40 +221,36 @@ double Graph::TSPDP(int current, int bitmask){
 	double minDistance = INFINATY;
 	for (int a = FIRST; a <= verticies-1; a++){
 		
-//		if current != adjacent AND
-		//	((bitmask & (1 << adjacent)) == 0)
 		if (adjacencies[current] != adjacencies[a] &&
 			((bitmask & (1 << a)) == 0)){
-			
-//			dist = distance from current to adjacent +
-//			TSPDP(adjacent, (bitmask | (1 << adjacent)))			
+						
 			double dist = adjMatrix[current][adjacencies[a]->GetId()] +
 									TSPDP(a, bitmask | (1 << a));
 			
-//			minDistance = min(minDistance, dist)
 			if(minDistance > dist){
 				minDistance = dist;
 			}
 		}
 	}
 	
-//	table[current][bitmask] = minDistance
-	MT[current][bitmask] = minDistance;
+	table[current][bitmask] = minDistance;
 	
 	return minDistance;
 }
 
 /*  Function: MinimumSpanningTree
  *--------------------------------------------------
- *	Usage:
+ *	Usage: MinimumSpanningTree()
  *--------------------------------------------------
- *  [DESCRIPTION]
- *
+ *  Uses Kruskal’s algorithm to find the Minimum
+ *	Spanning Tree (MST) for this Graph. Stores the
+ *	edges of the MST in the adjacency list of each
+ *	Vertex
  */
 void Graph::MinimumSpanningTree(){
-	int numEdges = START;
+	int numEdges = FIRST;
 	
-	//	1.Place each vertex in its own cluster or set
+	//	Place each vertex in its own cluster or set
 	DisjointSet *set = new DisjointSet(verticies);
 	
 	for (int i = FIRST; i < adjacencies.size(); i++){
@@ -265,43 +258,29 @@ void Graph::MinimumSpanningTree(){
 		MST.push_back(v);
 	}
 	
-
 	while(numEdges != verticies-1){
-//	2.Take the edge e with the smallest weight
-//
-//		int s = edges[e]->GetSource()->GetId(); //Source
-//		int d = edges[e]->GetDestination()->GetId(); //Destination
+		
+		//	Take the edge e with the smallest weight
 		Edge *e = edges.top();
 		edges.pop();
 		
 		int s = e->GetSource()->GetId(); //Source
 		int d = e->GetDestination()->GetId(); //Destination
 		
-//		a) If e connects two vertices in different clusters, 
 		if (!set->SameComponent(s,d)){
-			
-//		then e is added to the MST and the
-//		two clusters connected by e are merged into a
-//		single cluster
 			
 			set->Union(s, d);
 			numEdges++;
 			adjacencies[s]->AddAdjacency(adjacencies[d]);
 			adjacencies[d]->AddAdjacency(adjacencies[s]);
 		}
-		
-//		b) If e connects two vertices which are already
-//		in the same cluster, ignore it
-		e ++;
-		
-//	3.Continue until N – 1 edges are selected
 	}
 }
 
 
 /*  Function: DepthFirstSearch
  *--------------------------------------------------
- *	Usage:
+ *	Usage: DepthFirstSearch()
  *--------------------------------------------------
  *  Returns:  approximation for the TSP tour taken
  *	by traversing the vertices in depth first order of
@@ -309,62 +288,40 @@ void Graph::MinimumSpanningTree(){
  */
 double Graph::DepthFirstSearch(){
 
-	double dist = START;
+	double dist = FIRST;
+	
+	bool *visited = new bool[verticies];
 	
 	//   initialise visited array to false
-	bool *visited = new bool[verticies];
 	for (int b = 0; b < verticies; b++) {
 		visited[b] = false;
 	}
-	//visited.assign(adjacencies.size(), false);
-
-	// create empty stack
+	
 	stack<Vertex*> stack;
-	
-	// push vertex 0 onto stack
 	stack.push(MST[FIRST]);
-	
-	// mark vertex 0 visited
 	visited[FIRST] = true;
 	
-	// let current vertex = NULL 
 	Vertex *current = NULL;
-	
-	// let previous vertex = NULL
 	Vertex *previous = NULL;
 	
-	// while stack not empty 
-	while(!stack.empty()){
-		
-		//current = pop from stack
+	while(!stack.empty()){		
 		current = stack.top();
 		stack.pop();
 
-		//if previous not NULL
 		if(previous != NULL){
-			
-			// dist = dist + distance from previous to current
 			dist = dist + adjMatrix[previous->GetId()][current->GetId()];
 		}
 		
-		//for vertices adjacent to current
 		vector<Vertex*> adjacent = current->GetAdjacencies();
 		for(int v = FIRST; v < adjacent.size(); ++v){
 			
-			// if adjacent vertex not visited
 			if(!visited[adjacent[v]->GetId()]){
 				
-				//  push adjacent vertex onto stack
 				stack.push(adjacencies[adjacent[v]->GetId()]);
-				
-				// mark adjacent vertex visited
 				visited[adjacent[v]->GetId()] = true;
 			}
 		}
-		//previous = current end while
 		previous = current;
 	}
-	
-	//dist = distance from current to vertex 0
 	return dist + adjMatrix[current->GetId()][MST[FIRST]->GetId()];;
 }

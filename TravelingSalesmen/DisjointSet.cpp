@@ -15,10 +15,6 @@
  *	DisjointSet
  */
 DisjointSet::DisjointSet(int N){
-	
-	this->N = N;
-	//id.assign (N,0);
-	//size.assign (N,0);
 	size = new int[N];
 	id = new int[N];
 
@@ -34,20 +30,20 @@ DisjointSet::DisjointSet(int N){
  *--------------------------------------------------
  */
 DisjointSet::~DisjointSet(){
-		delete id;
-		delete size;
+		delete[] id;
+		delete[] size;
 }
 
 /*  Function: Find
  *--------------------------------------------------
- *	Usage:
+ *	Usage: Find(i)
  *--------------------------------------------------
  *  Returns:	The index of the parent set of the
  *				element in the parameter
  */
 int DisjointSet::Find(int i){
 	while (i != id[i]) {
-		id[i] = id[id[i]]; // make elements point to their grandparent
+		id[i] = id[id[i]]; // point to grandparent
 		i = id[i];
 	}
 	return i;
@@ -55,7 +51,7 @@ int DisjointSet::Find(int i){
 
 /*  Function: Union
  *--------------------------------------------------
- *	Usage:
+ *	Usage: set-> Union(p, q)
  *--------------------------------------------------
  *  Returns:	Creates the union of two disjoint sets whose
  *				indexes are passed as parameters
@@ -74,7 +70,7 @@ void DisjointSet::Union(int p, int q){
 
 /*  Function: SameComponent
  *--------------------------------------------------
- *	Usage:
+ *	Usage: set-> SameComponent(p, q)
  *--------------------------------------------------
  *  Returns:	true if the two indexes passed as
  *				parameters are in the same set

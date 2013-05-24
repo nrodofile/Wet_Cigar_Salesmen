@@ -36,9 +36,9 @@ Point::~Point(){
  *  Returns: the Euclidean distance between this Point
  *	and the Point* parameter to the function
  */
-double Point::DistanceTo(Point *point){
-	
+double Point::DistanceTo(Point *point){	
 	double squared = 2.0;
+	
 	return sqrt((pow(x - point->x, squared) +
 			pow(y - point->y, squared)));
 }
@@ -49,9 +49,9 @@ double Point::DistanceTo(Point *point){
  *-------------------------------------------------
  *  Returns: string representation of this Point
  */
-string Point::ToString(){
-	
+string Point::ToString(){	
 	stringstream ss;
+	
 	ss << "(" + to_string(x) + ", " + to_string(y) + ")";
 	return ss.str();
 }

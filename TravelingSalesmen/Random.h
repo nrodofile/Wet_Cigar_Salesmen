@@ -14,8 +14,7 @@
 #include <cstdlib>
 #include <ctime>
 
-class Random
-{
+class Random {
 public:
 	
 	/*
