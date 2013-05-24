@@ -21,16 +21,16 @@
 #include "DisjointSet.h"
 #include "EdgeComparer.h"
 
-#define INFINATY 2147483647
+#define INFINATY 9999999
 #define OPTIMAL_MAX 22
 #define TSPDP_MAX 12
 #define FIRST 0
 #define START 0
+#define UNSET -1
 
 class Graph {
 	
 	vector<Vertex*> adjacencies;
-	//vector <Edge*> edges;
 	double **adjMatrix;
 	vector<Vertex*> MST;	//Minimum Spanning Tree
 	std::priority_queue<Edge*, vector<Edge*>, EdgeComparer> edges;

@@ -37,8 +37,10 @@ Graph::~Graph(){
 	
 	for (int i = FIRST; i < verticies; i++) {
 		delete[] adjMatrix[i];
+		delete[] MT[i];
 	}
 	delete[] adjMatrix;
+	delete[] MT;
 }
 
 /*  Function: AddVertex
@@ -97,20 +99,21 @@ double Graph::OptimalTSP(){
 	double result = INFINATY;
 	
 	if (verticies > OPTIMAL_MAX){
-		cerr << " Cannot Get Optimal tour, there are more than 22 cities";
-		
+		cerr << "Cannot Get Optimal tour, there are more than 22 cities" << endl;
+		result = 0;
 	}else{
 		
 		if (verticies > TSPDP_MAX){
 			
 			//	Create memoisation table [N][(1 << N)]
-			MT = new double *[TSPDP_MAX];
+			MT = new double *[verticies];
 			//	Set all values in table to UNSET
 			for(int b = FIRST; b < verticies; b++){
 				
-				MT[b] = new double[TSPDP_MAX];
-				for (int m = FIRST; m < verticies; m++){
-					MT[b][(1 << TSPDP_MAX)] = 0;
+				MT[b] = new double[1 << verticies];
+				
+				for (int m = FIRST; m < (1 << verticies); m++){
+					MT[b][m] = UNSET;
 				}
 			}			
 			result = TSPDP(FIRST, 1);
@@ -195,8 +198,6 @@ double Graph::TSPBruteForce(int current, bool* visited){
 		}
 	}
 	
-	delete[] visitedCp;
-	
 	return minDistance;
 
 }
@@ -212,7 +213,7 @@ double Graph::TSPBruteForce(int current, bool* visited){
 double Graph::TSPDP(int current, int bitmask){
 	
 //	if table[current][bitmask] is not UNSET
-	if (MT[current][bitmask]){		
+	if (MT[current][bitmask] != UNSET){
 		return MT[current][bitmask];
 	}
 
@@ -255,7 +256,6 @@ double Graph::TSPDP(int current, int bitmask){
  */
 void Graph::MinimumSpanningTree(){
 	int numEdges = START;
-	double w = 0; //test
 	
 	//	1.Place each vertex in its own cluster or set
 	DisjointSet *set = new DisjointSet(verticies);
@@ -286,7 +286,6 @@ void Graph::MinimumSpanningTree(){
 			
 			set->Union(s, d);
 			numEdges++;
-			w += e->GetWeight();
 			adjacencies[s]->AddAdjacency(adjacencies[d]);
 			adjacencies[d]->AddAdjacency(adjacencies[s]);
 		}
@@ -297,7 +296,6 @@ void Graph::MinimumSpanningTree(){
 		
 //	3.Continue until N – 1 edges are selected
 	}
-	cout << w << endl;
 }
 
 
@@ -311,20 +309,20 @@ void Graph::MinimumSpanningTree(){
  */
 double Graph::DepthFirstSearch(){
 
-	//dist = 0
 	double dist = START;
 	
 	//   initialise visited array to false
-	vector<int> visited;
-	visited.assign(adjacencies.size(), false);
+	bool *visited = new bool[verticies];
+	for (int b = 0; b < verticies; b++) {
+		visited[b] = false;
+	}
+	//visited.assign(adjacencies.size(), false);
 
 	// create empty stack
 	stack<Vertex*> stack;
 	
 	// push vertex 0 onto stack
 	stack.push(MST[FIRST]);
-	//stack.push(MST.top());
-	
 	
 	// mark vertex 0 visited
 	visited[FIRST] = true;
@@ -368,6 +366,5 @@ double Graph::DepthFirstSearch(){
 	}
 	
 	//dist = distance from current to vertex 0
-	double back = adjMatrix[current->GetId()][MST[FIRST]->GetId()];
-	return dist + back;
+	return dist + adjMatrix[current->GetId()][MST[FIRST]->GetId()];;
 }

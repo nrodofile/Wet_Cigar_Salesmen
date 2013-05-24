@@ -39,23 +39,7 @@ public:
  *-------------------------------------------------
  */
 	~Point();
-	
-/*  Function:
- *--------------------------------------------------
- *	Usage: GetX
- *--------------------------------------------------
- *  Returns: the X position for this point
- */
-	int GetX();
-	
-/*  Function:
- *--------------------------------------------------
- *	Usage: GetY
- *--------------------------------------------------
- *  Returns: the Y position for this point
- */
-	int GetY();
-	
+		
 /*  Function: DistanceToPoint
  *--------------------------------------------------
  *	Usage: distance = point.DistanceToPoint(point2)
